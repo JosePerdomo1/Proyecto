@@ -1,18 +1,20 @@
-const { SerialPort } = require('serialport');
-const { ReadlineParser } = require('@serialport/parser-readline');
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
 
-// puerto utilizado COM5
-const port = new SerialPort({ path: 'COM5', baudRate: 9600 });
-
-// el parser para leer datos línea por línea
-const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }));
-
-// Evento que ocurre cuando recibes datos del puerto serial
-parser.on('data', (data) => {
-  console.log('Temperatura: ' + data);
+// Endpoint para recibir datos de temperatura
+app.get('/temperature', (req, res) => {
+  const temperature = parseFloat(req.query.temp);  // Leer el parámetro "temp" de la URL
+  if (!isNaN(temperature)) {
+    console.log(`Temperatura recibida: ${temperature}°C`);
+    // Aquí podrías guardar los datos en la base de datos, si lo deseas.
+    res.send('Temperatura recibida');
+  } else {
+    res.status(400).send('Temperatura inválida');
+  }
 });
 
-
-port.on('error', (err) => {
-  console.log('Error: ', err.message);
+// Iniciar el servidor
+app.listen(port, () => {
+  console.log(`Servidor corriendo en el puerto ${port}`);
 });

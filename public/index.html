@@ -20,18 +20,32 @@
     </style>
 </head>
 <body>
-    <h1>Temperatura Actual</h1>
-    <div id="temperature">Esperando datos...</div>
+    <h1>Monitor de Temperatura</h1>
+  <p>Temperatura actual: <span id="temperature">Cargando...</span> °C</p>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        // Conectarse al servidor de socket.io
-        const socket = io();
-
-        // Escuchar el evento 'tempData' desde el servidor
-        socket.on('tempData', (data) => {
-            document.getElementById('temperature').textContent = `Temperatura: ${data} °C`;
+  <script>
+    // Función para obtener y actualizar la temperatura
+    function fetchTemperature() {
+      fetch('/getTemperature')
+        .then(response => response.json())
+        .then(data => {
+          if (data.temperature !== undefined) {
+            document.getElementById('temperature').innerText = data.temperature;
+          } else {
+            document.getElementById('temperature').innerText = 'No disponible';
+          }
+        })
+        .catch(error => {
+          console.error('Error al obtener la temperatura:', error);
+          document.getElementById('temperature').innerText = 'Error';
         });
+    }
+
+    // Actualiza la temperatura cada 10 segundos
+    setInterval(fetchTemperature, 10000);
+
+    fetchTemperature();
+  </script>
     </script>
 </body>
 </html>

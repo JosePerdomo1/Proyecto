@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensor temperatura</title>
+    <title>Sensor de Temperatura y Ubicación</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,35 +17,62 @@
             font-size: 2em;
             color: #ff5733;
         }
+        .info {
+            font-size: 1.2em;
+            color: #555;
+        }
     </style>
 </head>
 <body>
-    <h1>Monitor de Temperatura</h1>
-  <p>Temperatura actual: <span id="temperature">Cargando...</span> °C</p>
+    <h1>Monitor de Temperatura y Ubicación</h1>
+    <p>Temperatura actual: <span id="temperature">Cargando...</span> °C</p>
+    <p class="info">Ciudad: <span id="city">Cargando...</span></p>
+    <p class="info">Latitud: <span id="latitude">Cargando...</span></p>
+    <p class="info">Longitud: <span id="longitude">Cargando...</span></p>
 
-  <script>
-    // Función para obtener y actualizar la temperatura
-    function fetchTemperature() {
-      fetch('/getTemperature')
-        .then(response => response.json())
-        .then(data => {
-          if (data.temperature !== undefined) {
-            document.getElementById('temperature').innerText = data.temperature;
-          } else {
-            document.getElementById('temperature').innerText = 'No disponible';
-          }
-        })
-        .catch(error => {
-          console.error('Error al obtener la temperatura:', error);
-          document.getElementById('temperature').innerText = 'Error';
-        });
-    }
+    <script>
+        // Función para obtener y actualizar los datos
+        function fetchData() {
+            fetch('/getTemperature')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.temperature !== undefined) {
+                        document.getElementById('temperature').innerText = data.temperature;
+                    } else {
+                        document.getElementById('temperature').innerText = 'No disponible';
+                    }
 
-    // Actualiza la temperatura cada 10 segundos
-    setInterval(fetchTemperature, 10000);
+                    if (data.city !== undefined) {
+                        document.getElementById('city').innerText = data.city;
+                    } else {
+                        document.getElementById('city').innerText = 'No disponible';
+                    }
 
-    fetchTemperature();
-  </script>
+                    if (data.latitude !== undefined) {
+                        document.getElementById('latitude').innerText = data.latitude;
+                    } else {
+                        document.getElementById('latitude').innerText = 'No disponible';
+                    }
+
+                    if (data.longitude !== undefined) {
+                        document.getElementById('longitude').innerText = data.longitude;
+                    } else {
+                        document.getElementById('longitude').innerText = 'No disponible';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener los datos:', error);
+                    document.getElementById('temperature').innerText = 'Error';
+                    document.getElementById('city').innerText = 'Error';
+                    document.getElementById('latitude').innerText = 'Error';
+                    document.getElementById('longitude').innerText = 'Error';
+                });
+        }
+
+        // Actualiza los datos cada 10 segundos
+        setInterval(fetchData, 10000);
+
+        fetchData();
     </script>
 </body>
 </html>

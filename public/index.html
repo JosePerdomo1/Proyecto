@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sensor de Temperatura y Ubicación</title>
+    <!-- <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=console.debug&libraries=maps,marker&v=beta"></script> -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,11 +30,14 @@
     <p class="info">Ciudad: <span id="city">Cargando...</span></p>
     <p class="info">Latitud: <span id="latitude">Cargando...</span></p>
     <p class="info">Longitud: <span id="longitude">Cargando...</span></p>
+    <!-- <gmp-map center="40.12150192260742,-100.45039367675781" zoom="4" map-id="DEMO_MAP_ID">
+        <gmp-advanced-marker position="40.12150192260742,-100.45039367675781" title="My location"></gmp-advanced-marker>
+    </gmp-map> -->
 
     <script>
         // Función para obtener y actualizar los datos
         function fetchData() {
-            fetch('/getTemperature')
+            fetch('/temperature')
                 .then(response => response.json())
                 .then(data => {
                     if (data.temperature !== undefined) {

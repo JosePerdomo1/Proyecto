@@ -3,7 +3,7 @@ const app = express();
 const { Pool } = require('pg'); 
 const port = process.env.PORT || 10000;
 const pool = new Pool({
-  connectionString: 'postgresql://jose:27dgCgtjtqrvybOGIZrbxaYov8iHiWYi@dpg-ct3nqq5umphs73e04900-a.frankfurt-postgres.render.com/sensor_db_oie7',
+  connectionString: 'postgresql://jose:27dgCgtjtqrvybOGIZrbxaYov8iHiWYi@dpg-ct3nqq5umphs73e04900-a/sensor_db_oie7',
   ssl: {
     rejectUnauthorized: false 
   }

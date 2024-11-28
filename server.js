@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
-const { Pool } = require('pg'); 
+const { Pool } = require('pg');
 const port = process.env.PORT || 10000;
 const pool = new Pool({
   connectionString: 'postgresql://jose:27dgCgtjtqrvybOGIZrbxaYov8iHiWYi@dpg-ct3nqq5umphs73e04900-a/sensor_db_oie7',
   ssl: {
-    rejectUnauthorized: false 
+    rejectUnauthorized: false
   }
 });
 
@@ -63,9 +63,8 @@ app.route('/temperature')
 
         const ubicacionResult = await pool.query(
           `INSERT INTO ubicaciones (nombre, latitud, longitud, descripcion)
-           VALUES ($1, $2, $3, $4)
-           ON CONFLICT (nombre) DO UPDATE SET latitud = EXCLUDED.latitud, longitud = EXCLUDED.longitud
-           RETURNING id`,
+          VALUES ($1, $2, $3, $4)
+          RETURNING id;`,
           [city, latitude, longitude, `Ubicación de ${city}`]
         );
         const ubicacionId = ubicacionResult.rows[0].id;
@@ -91,7 +90,7 @@ app.route('/temperature')
 app.get('/', (req, res) => {
   const path = require('path');
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  
+
 });
 
 // // Endpoint para obtener la última temperatura y ubicación

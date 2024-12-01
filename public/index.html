@@ -3,37 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensor de Temperatura y Ubicación</title>
-    <!-- <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=console.debug&libraries=maps,marker&v=beta"></script> -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        h1 {
-            color: #333;
-        }
-        #temperature {
-            font-size: 2em;
-            color: #ff5733;
-        }
-        .info {
-            font-size: 1.2em;
-            color: #555;
-        }
-    </style>
+    <title>Sensor de Temperatura</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Monitor de Temperatura y Ubicación</h1>
-    <p>Temperatura actual: <span id="temperature">Cargando...</span> °C</p>
-    <p class="info">Ciudad: <span id="city">Cargando...</span></p>
-    <p class="info">Latitud: <span id="latitude">Cargando...</span></p>
-    <p class="info">Longitud: <span id="longitude">Cargando...</span></p>
-    <!-- <gmp-map center="40.12150192260742,-100.45039367675781" zoom="4" map-id="DEMO_MAP_ID">
-        <gmp-advanced-marker position="40.12150192260742,-100.45039367675781" title="My location"></gmp-advanced-marker>
-    </gmp-map> -->
-
+    <nav class="navbar">
+        <div class="logo">Proyecto Sensores</div>
+        <div class="links">
+            <a href="index.html">Inicio</a>
+            <a href="mapa.html">Mapa</a>
+            <a href="historial.html">Historial</a>
+            <a href="contacto.html">Contacto</a>
+        </div>
+    </nav>
+    <div class="container">
+        <!-- Columna izquierda: Widget del tiempo -->
+        <div class="column">
+            <h2>Temperatura Exterior</h2>
+            <div id="tiempo_d68d5ce552833d419c6e93ca9c92666e"> 
+                <div></div>
+                <div>
+                    <img src="//www.tiempo.es/build/img/logo/tiempo133.png" width="80" height="18" alt="tiempo.es">
+                </div>
+                <script type="text/javascript" src="//www.tiempo.es/widload/es/ver/520/340/101/es0va0240/d68d5ce552833d419c6e93ca9c92666e.js"></script>
+            </div>
+        </div>
+        <!-- Columna derecha: Datos del Arduino -->
+        <div class="column">
+            <h2>Temperatura Interior</h2>
+            <p>Temperatura actual: <span id="temperature">Cargando...</span> °C</p>
+            <p class="info">Ciudad: <span id="city">Cargando...</span></p>
+            <p class="info">Latitud: <span id="latitude">Cargando...</span></p>
+            <p class="info">Longitud: <span id="longitude">Cargando...</span></p>
+        </div>
+    </div>
     <script>
       function fetchData() {
          fetch('/getTemperature')  

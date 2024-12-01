@@ -8,6 +8,7 @@ const pool = new Pool({
     rejectUnauthorized: false
   }
 });
+app.use(express.static('public'));
 
 let latestTemperature = null;
 let latestCity = null;

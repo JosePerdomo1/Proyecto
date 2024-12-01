@@ -1,0 +1,100 @@
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 0.5em 1em;
+    color: white;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5em 1em;
+    transition: background 0.3s;
+}
+
+.navbar a:hover {
+    background-color: #575757;
+    border-radius: 5px;
+}
+
+.navbar .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.navbar .links {
+    display: flex;
+    gap: 1em;
+}
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+}
+h1 {
+    color: #333;
+}
+#temperature {
+    font-size: 2em;
+    color: #ff5733;
+}
+.info {
+    font-size: 1.2em;
+    color: #555;
+}
+ /* Estilo del contenedor */
+ .container {
+    display: flex;
+    flex-wrap: wrap; /* Responsivo */
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Estilo de las columnas */
+.column {
+    flex: 1;
+    min-width: 300px; /* Ancho mínimo en pantallas pequeñas */
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrar contenido horizontalmente */
+    text-align: center; /* Centrar texto dentro de la columna */
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.info {
+    margin: 10px 0;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 600px) {
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav .links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .column {
+        width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+    }
+}

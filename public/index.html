@@ -35,31 +35,37 @@
     </gmp-map> -->
 
     <script>
-        // Función para obtener y actualizar los datos
-        function fetchData() {
-            fetch('/getTemperature')  // Aquí obtenemos los datos desde el servidor
-                .then(response => response.text())  // Esperamos una respuesta de texto
-                .then(data => {
-                    // Aquí debes extraer la información desde el texto
-                    const params = new URLSearchParams(data);
-                    document.getElementById('temperature').innerText = params.get('temp') || 'No disponible';
-                    document.getElementById('city').innerText = params.get('city') || 'No disponible';
-                    document.getElementById('latitude').innerText = params.get('lat') || 'No disponible';
-                    document.getElementById('longitude').innerText = params.get('lon') || 'No disponible';
-                })
-                .catch(error => {
-                    console.error('Error al obtener los datos:', error);
-                    document.getElementById('temperature').innerText = 'Error';
-                    document.getElementById('city').innerText = 'Error';
-                    document.getElementById('latitude').innerText = 'Error';
-                    document.getElementById('longitude').innerText = 'Error';
-                });
-        }
-
-        // Actualiza los datos cada 10 segundos
-        setInterval(fetchData, 10000);
-
-        fetchData();
+      function fetchData() {
+         fetch('/getTemperature')  
+    .then(response => response.text())  
+    .then(data => {
+      if (data) {
+        const dataArray = data.split('&');
+        const temperature = dataArray[0].split('=')[1];
+        const city = dataArray[1].split('=')[1];
+        const latitude = dataArray[2].split('=')[1];
+        const longitude = dataArray[3].split('=')[1];
+        document.getElementById('temperature').innerText = temperature;
+        document.getElementById('city').innerText = city;
+        document.getElementById('latitude').innerText = latitude;
+        document.getElementById('longitude').innerText = longitude;
+      } else {
+        document.getElementById('temperature').innerText = 'No disponible';
+        document.getElementById('city').innerText = 'No disponible';
+        document.getElementById('latitude').innerText = 'No disponible';
+        document.getElementById('longitude').innerText = 'No disponible';
+      }
+    })
+    .catch(error => {
+      console.error('Error al obtener los datos:', error);
+      document.getElementById('temperature').innerText = 'Error';
+      document.getElementById('city').innerText = 'Error';
+      document.getElementById('latitude').innerText = 'Error';
+      document.getElementById('longitude').innerText = 'Error';
+    });
+}
+setInterval(fetchData, 10000);
+fetchData(); 
     </script>
 </body>
 </html>

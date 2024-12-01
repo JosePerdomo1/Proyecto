@@ -68,24 +68,20 @@ app.post('/temperature', async (req, res) => {
   }
 });
 
-
 app.get('/getTemperature', (_, res) => {
-  if (latestTemperature !== null && latestCity && latestLatitude !== null && latestLongitude !== null) {
-    const responseUrl = `/temperature?temp=${latestTemperature}&city=${latestCity}&lat=${latestLatitude}&lon=${latestLongitude}`;
-    res.redirect(responseUrl);
-  } else {
-    res.status(404).send('No se han recibido datos aún');
-  }
+  const temperature = latestTemperature;
+  const city = latestCity;
+  const latitude = latestLatitude;
+  const longitude = latestLongitude;
+  const responseUrl = `temp=${temperature}&city=${city}&lat=${latitude}&lon=${longitude}`;
+  res.send(responseUrl);
 });
-
 
 app.get('/', (_, res) => {
   const path = require('path');
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 
 });
-
-
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en el puerto ${port}`);

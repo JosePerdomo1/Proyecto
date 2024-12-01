@@ -37,7 +37,7 @@
     <script>
         // Función para obtener y actualizar los datos
         function fetchData() {
-            fetch('/temperature')  // Aquí obtenemos los datos desde el servidor
+            fetch('/getTemperature')  // Aquí obtenemos los datos desde el servidor
                 .then(response => response.text())  // Esperamos una respuesta de texto
                 .then(data => {
                     // Aquí debes extraer la información desde el texto

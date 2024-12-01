@@ -9,7 +9,11 @@ const pool = new Pool({
   }
 });
 
-app.use(express.urlencoded({ extended: true })); // Middleware para manejar parámetros de URL
+let latestTemperature = null;
+let latestCity = null;
+let latestLatitude = null;
+let latestLongitude = null;
+app.use(express.urlencoded({ extended: true })); 
 
 app.post('/temperature', async (req, res) => {
   const temperature = parseFloat(req.query.temp);
@@ -18,12 +22,15 @@ app.post('/temperature', async (req, res) => {
     const longitude = parseFloat(req.query.lon);
 
     if (!isNaN(temperature) && city && !isNaN(latitude) && !isNaN(longitude)) {
+        latestTemperature = temperature;
+        latestCity = city;
+        latestLatitude = latitude;
+        latestLongitude = longitude;
         console.log(`Datos recibidos:
         Temperatura: ${temperature}°C
         Ciudad: ${city}
         Latitud: ${latitude}
         Longitud: ${longitude}`);
-    // Guardar los datos en la base de datos
     try {
       const sensorName = 'Arduino UNO R4 WIFI';
       const sensorResult = await pool.query(
@@ -62,21 +69,17 @@ app.post('/temperature', async (req, res) => {
 });
 
 
-app.get('/getTemperature', (req, res) => {
+app.get('/getTemperature', (_, res) => {
   if (latestTemperature !== null && latestCity && latestLatitude !== null && latestLongitude !== null) {
-    res.json({
-      temperature: latestTemperature,
-      city: latestCity,
-      latitude: latestLatitude,
-      longitude: latestLongitude
-    });
+    const responseUrl = `/temperature?temp=${latestTemperature}&city=${latestCity}&lat=${latestLatitude}&lon=${latestLongitude}`;
+    res.redirect(responseUrl);
   } else {
-    res.status(404).json({ error: 'No hay datos disponibles' });
+    res.status(404).send('No se han recibido datos aún');
   }
 });
 
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   const path = require('path');
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 

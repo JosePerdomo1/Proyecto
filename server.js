@@ -9,30 +9,20 @@ const pool = new Pool({
   }
 });
 
-let latestTemperature = null;
-let latestCity = null;
-let latestLatitude = null;
-let latestLongitude = null;
+app.use(express.urlencoded({ extended: true })); // Middleware para manejar parámetros de URL
 
 app.post('/temperature', async (req, res) => {
   const temperature = parseFloat(req.query.temp);
-  const city = req.query.city;
-  const latitude = parseFloat(req.query.lat);
-  const longitude = parseFloat(req.query.lon);
+    const city = req.query.city;
+    const latitude = parseFloat(req.query.lat);
+    const longitude = parseFloat(req.query.lon);
 
-  if (!isNaN(temperature) && city && !isNaN(latitude) && !isNaN(longitude)) {
-    // Actualizar las variables locales con los últimos datos recibidos
-    latestTemperature = temperature;
-    latestCity = city;
-    latestLatitude = latitude;
-    latestLongitude = longitude;
-
-    console.log(`Datos recibidos: 
-      Temperatura: ${temperature}°C,
-      Ciudad: ${city},
-      Latitud: ${latitude},
-      Longitud: ${longitude}`);
-
+    if (!isNaN(temperature) && city && !isNaN(latitude) && !isNaN(longitude)) {
+        console.log(`Datos recibidos:
+        Temperatura: ${temperature}°C
+        Ciudad: ${city}
+        Latitud: ${latitude}
+        Longitud: ${longitude}`);
     // Guardar los datos en la base de datos
     try {
       const sensorName = 'Arduino UNO R4 WIFI';

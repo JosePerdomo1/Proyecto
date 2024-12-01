@@ -37,7 +37,7 @@
     <script>
         // Función para obtener y actualizar los datos
         function fetchData() {
-            fetch('/Temperature')
+            fetch('/temperature')
                 .then(response => response.json())
                 .then(data => {
                     if (data.temperature !== undefined) {

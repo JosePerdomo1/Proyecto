@@ -37,32 +37,15 @@
     <script>
         // Función para obtener y actualizar los datos
         function fetchData() {
-            fetch('/temperature')
-                .then(response => response.json())
+            fetch('/temperature')  // Aquí obtenemos los datos desde el servidor
+                .then(response => response.text())  // Esperamos una respuesta de texto
                 .then(data => {
-                    if (data.temperature !== undefined) {
-                        document.getElementById('temperature').innerText = data.temperature;
-                    } else {
-                        document.getElementById('temperature').innerText = 'No disponible';
-                    }
-
-                    if (data.city !== undefined) {
-                        document.getElementById('city').innerText = data.city;
-                    } else {
-                        document.getElementById('city').innerText = 'No disponible';
-                    }
-
-                    if (data.latitude !== undefined) {
-                        document.getElementById('latitude').innerText = data.latitude;
-                    } else {
-                        document.getElementById('latitude').innerText = 'No disponible';
-                    }
-
-                    if (data.longitude !== undefined) {
-                        document.getElementById('longitude').innerText = data.longitude;
-                    } else {
-                        document.getElementById('longitude').innerText = 'No disponible';
-                    }
+                    // Aquí debes extraer la información desde el texto
+                    const params = new URLSearchParams(data);
+                    document.getElementById('temperature').innerText = params.get('temp') || 'No disponible';
+                    document.getElementById('city').innerText = params.get('city') || 'No disponible';
+                    document.getElementById('latitude').innerText = params.get('lat') || 'No disponible';
+                    document.getElementById('longitude').innerText = params.get('lon') || 'No disponible';
                 })
                 .catch(error => {
                     console.error('Error al obtener los datos:', error);

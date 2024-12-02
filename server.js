@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const { Pool } = require('pg');
+const bodyParser = require('body-parser');
 const port = process.env.PORT || 10000;
 const pool = new Pool({
   connectionString: 'postgresql://jose:27dgCgtjtqrvybOGIZrbxaYov8iHiWYi@dpg-ct3nqq5umphs73e04900-a/sensor_db_oie7',
@@ -9,6 +10,7 @@ const pool = new Pool({
   }
 });
 app.use(express.static('public'));
+app.use(bodyParser.json());
 
 let latestTemperature = null;
 let latestCity = null;
@@ -76,6 +78,48 @@ app.get('/getTemperature', (_, res) => {
   const longitude = latestLongitude;
   const responseUrl = `temp=${temperature}&city=${city}&lat=${latitude}&lon=${longitude}`;
   res.send(responseUrl);
+});
+
+app.post('/send', async (req, res) => {
+  const { name, email, subject, message, terms } = req.body;
+
+  try {
+    await pool.query(
+      `INSERT INTO formulario_contacto (nombre, correo, asunto, mensaje, terminos)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [name, email, subject, message, terms ? 'Aceptados' : 'No aceptados']
+    );
+
+    console.log('Datos guardados en la base de datos.');
+
+    
+    const transporter = nodemailer.createTransport({
+      service: 'outlook', 
+      auth: {
+        user: process.env.USERMAIL,
+        pass: process.env.PASSMAIL
+      }
+    });
+
+    
+    const mailOptions = {
+      from: process.env.USERMAIL,
+      to: email,
+      subject: `Gracias por tu mensaje: ${subject}`,
+      text: `Hola ${name},\n\nHemos recibido tu mensaje:\n\n"${message}"\n\nNos pondremos en contacto contigo pronto.\n\nSaludos,\nEl equipo.`
+    };
+
+    
+    await transporter.sendMail(mailOptions);
+
+    console.log('Correo enviado con éxito.');
+
+    
+    res.send('Formulario enviado y procesado correctamente.');
+  } catch (error) {
+    console.error('Error al procesar el formulario:', error);
+    res.status(500).send('Hubo un error al procesar el formulario.');
+  }
 });
 
 app.get('/', (_, res) => {

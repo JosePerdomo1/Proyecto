@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sensor de Temperatura</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="icon" href="https://cdn-icons-png.freepik.com/512/3380/3380402.png" type="image/x-icon">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="logo">Proyecto Sensores</div>
@@ -20,55 +23,57 @@
         <!-- Columna izquierda: Widget del tiempo -->
         <div class="column">
             <h2>Temperatura Exterior</h2>
-            <div id="tiempo_d68d5ce552833d419c6e93ca9c92666e"> 
+            <div id="tiempo_74ca4476ed71f2316b40e5fd46a58a5a">
                 <div></div>
-                <div>
-                    <img src="//www.tiempo.es/build/img/logo/tiempo133.png" width="80" height="18" alt="tiempo.es">
+                <div> <img src="//www.tiempo.es/build/img/logo/tiempo133.png" width="80" height="18" alt="tiempo.es">
                 </div>
-                <script type="text/javascript" src="//www.tiempo.es/widload/es/ver/520/340/101/es0va0240/d68d5ce552833d419c6e93ca9c92666e.js"></script>
+                <script type="text/javascript"
+                    src="//www.tiempo.es/widload/es/ver/300/340/100/es0va0240/74ca4476ed71f2316b40e5fd46a58a5a.js"></script>
             </div>
         </div>
+
         <!-- Columna derecha: Datos del Arduino -->
         <div class="column">
             <h2>Temperatura Interior</h2>
             <p>Temperatura actual: <span id="temperature">Cargando...</span> °C</p>
-            <p class="info">Ciudad: <span id="city">Cargando...</span></p>
-            <p class="info">Latitud: <span id="latitude">Cargando...</span></p>
-            <p class="info">Longitud: <span id="longitude">Cargando...</span></p>
+            <p>Ciudad: <span id="city">Cargando...</span></p>
+            <p>Latitud: <span id="latitude">Cargando...</span></p>
+            <p>Longitud: <span id="longitude">Cargando...</span></p>
         </div>
     </div>
     <script>
-      function fetchData() {
-         fetch('/getTemperature')  
-    .then(response => response.text())  
-    .then(data => {
-      if (data) {
-        const dataArray = data.split('&');
-        const temperature = dataArray[0].split('=')[1];
-        const city = dataArray[1].split('=')[1];
-        const latitude = dataArray[2].split('=')[1];
-        const longitude = dataArray[3].split('=')[1];
-        document.getElementById('temperature').innerText = temperature;
-        document.getElementById('city').innerText = city;
-        document.getElementById('latitude').innerText = latitude;
-        document.getElementById('longitude').innerText = longitude;
-      } else {
-        document.getElementById('temperature').innerText = 'No disponible';
-        document.getElementById('city').innerText = 'No disponible';
-        document.getElementById('latitude').innerText = 'No disponible';
-        document.getElementById('longitude').innerText = 'No disponible';
-      }
-    })
-    .catch(error => {
-      console.error('Error al obtener los datos:', error);
-      document.getElementById('temperature').innerText = 'Error';
-      document.getElementById('city').innerText = 'Error';
-      document.getElementById('latitude').innerText = 'Error';
-      document.getElementById('longitude').innerText = 'Error';
-    });
-}
-setInterval(fetchData, 10000);
-fetchData(); 
+        function fetchData() {
+            fetch('/getTemperature')
+                .then(response => response.text())
+                .then(data => {
+                    if (data) {
+                        const dataArray = data.split('&');
+                        const temperature = dataArray[0].split('=')[1];
+                        const city = dataArray[1].split('=')[1];
+                        const latitude = dataArray[2].split('=')[1];
+                        const longitude = dataArray[3].split('=')[1];
+                        document.getElementById('temperature').innerText = temperature;
+                        document.getElementById('city').innerText = city;
+                        document.getElementById('latitude').innerText = latitude;
+                        document.getElementById('longitude').innerText = longitude;
+                    } else {
+                        document.getElementById('temperature').innerText = 'No disponible';
+                        document.getElementById('city').innerText = 'No disponible';
+                        document.getElementById('latitude').innerText = 'No disponible';
+                        document.getElementById('longitude').innerText = 'No disponible';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener los datos:', error);
+                    document.getElementById('temperature').innerText = 'Error';
+                    document.getElementById('city').innerText = 'Error';
+                    document.getElementById('latitude').innerText = 'Error';
+                    document.getElementById('longitude').innerText = 'Error';
+                });
+        }
+        setInterval(fetchData, 10000);
+        fetchData(); 
     </script>
 </body>
+
 </html>

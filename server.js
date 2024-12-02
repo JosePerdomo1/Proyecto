@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const { Pool } = require('pg');
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 const port = process.env.PORT || 10000;
 const pool = new Pool({
   connectionString: 'postgresql://jose:27dgCgtjtqrvybOGIZrbxaYov8iHiWYi@dpg-ct3nqq5umphs73e04900-a/sensor_db_oie7',

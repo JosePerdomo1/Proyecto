@@ -44,8 +44,43 @@
                 <label for="terms">Acepto los términos y condiciones</label>
             </div>
             <button type="submit" class="submit-button">Enviar</button>
+            <div id="form-message" class="hidden"></div>
         </form>
     </div>
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Evita que el formulario se recargue
+    
+            const formMessage = document.getElementById('form-message');
+            formMessage.classList.add('hidden'); // Oculta el mensaje al enviar
+    
+            const formData = new FormData(e.target); // Obtiene los datos del formulario
+    
+            try {
+                const response = await fetch('/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                });
+    
+                if (response.ok) {
+                    formMessage.textContent = 'Formulario enviado correctamente. ¡Gracias por tu mensaje!';
+                    formMessage.classList.remove('hidden', 'error');
+                    formMessage.classList.add('success');
+                    e.target.reset(); // Limpia el formulario
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Error desconocido');
+                }
+            } catch (error) {
+                formMessage.textContent = `Hubo un error al enviar el formulario: ${error.message}`;
+                formMessage.classList.remove('hidden', 'success');
+                formMessage.classList.add('error');
+            }
+        });
+    </script>    
 </body>
 
 </html>

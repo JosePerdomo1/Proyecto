@@ -91,37 +91,31 @@ app.post('/send', async (req, res) => {
       [name, email, subject, message, terms ? 'Aceptados' : 'No aceptados']
     );
 
-    console.log('Datos guardados en la base de datos.');
-
-    
     const transporter = nodemailer.createTransport({
-      service: 'outlook', 
+      service: 'outlook',
       auth: {
         user: process.env.USERMAIL,
-        pass: process.env.PASSMAIL
-      }
+        pass: process.env.PASSMAIL,
+      },
     });
 
-    
     const mailOptions = {
       from: process.env.USERMAIL,
       to: email,
       subject: `Gracias por tu mensaje: ${subject}`,
-      text: `Hola ${name},\n\nHemos recibido tu mensaje:\n\n"${message}"\n\nNos pondremos en contacto contigo pronto.\n\nSaludos,\nEl equipo.`
+      text: `Hola ${name},\n\nHemos recibido tu mensaje:\n\n"${message}"\n\nNos pondremos en contacto contigo pronto.\n\nSaludos,\nEl equipo.`,
     };
 
-    
     await transporter.sendMail(mailOptions);
 
-    console.log('Correo enviado con éxito.');
-
-    
-    res.send('Formulario enviado y procesado correctamente.');
+    console.log('Datos guardados y correo enviado con éxito.');
+    res.status(200).send('Formulario enviado con éxito.');
   } catch (error) {
     console.error('Error al procesar el formulario:', error);
     res.status(500).send('Hubo un error al procesar el formulario.');
   }
 });
+
 
 app.get('/', (_, res) => {
   const path = require('path');

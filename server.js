@@ -15,6 +15,7 @@ const pool = new Pool({
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); 
 
 let latestTemperature = null;
 let latestCity = null;
@@ -25,7 +26,7 @@ app.use(session({
   secret: process.env.PASSADMIN,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true } 
+  cookie: { secure: true }
 }));
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -45,6 +46,9 @@ app.post('/login', async (req, res) => {
     if (!isMatch) {
       return res.status(400).send('Contraseña incorrecta');
     }
+    console.log('Username ingresado:', username);
+    console.log('Contraseña ingresada:', password);
+    console.log('Resultado de la consulta:', result.rows);
 
     // Establecer la sesión
     req.session.userId = user.id;
@@ -66,9 +70,9 @@ app.post('/api/validate-admin-password', (req, res) => {
   const { password } = req.body;
 
   if (password === process.env.PASSADMIN) {
-      res.status(200).send('Validado');
+    res.status(200).send('Validado');
   } else {
-      res.status(401).send('Contraseña incorrecta');
+    res.status(401).send('Contraseña incorrecta');
   }
 });
 

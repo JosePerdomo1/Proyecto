@@ -91,7 +91,7 @@
             const loginData = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch('/api/login', {
+                const response = await fetch('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -101,7 +101,7 @@
 
                 if (response.ok) {
                     alert("Inicio de sesión exitoso");
-                    window.location.href = "pagina-protegida.html"; // Redirige al contenido protegido
+                    window.location.href = "admin.html"; 
                 } else {
                     alert("Usuario o contraseña incorrectos");
                 }

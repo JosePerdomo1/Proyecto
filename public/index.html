@@ -10,37 +10,78 @@
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="logo">Proyecto Sensores</div>
-        <div class="links">
-            <a href="index.html">Inicio</a>
-            <a href="mapa.html">Mapa</a>
-            <a href="historial.html">Historial</a>
-            <a href="contacto.html">Contacto</a>
+    <header>
+        <div class="content">
+            <hgroup>
+                <h1>Monitoriza, Analiza y Actúa: Tu Asistente de Temperatura</h1>
+                <img src="https://portal.edu.gva.es/iesjuandegaray/wp-content/uploads/sites/594/2022/03/logo-Juan-de-Garay.png"
+                    alt="logo insti" width="300">
+                <i>Proyecto sensor cº con arduino</i>
+            </hgroup>
         </div>
-    </nav>
-    <div class="container">
-        <!-- Columna izquierda: Widget del tiempo -->
-        <div class="column">
-            <h2>Temperatura Exterior</h2>
-            <div id="tiempo_74ca4476ed71f2316b40e5fd46a58a5a">
-                <div></div>
-                <div> <img src="//www.tiempo.es/build/img/logo/tiempo133.png" width="80" height="18" alt="tiempo.es">
+        <div class="overlay"></div>
+    </header>
+    <section class="site">
+        <nav>
+            <a
+                href="https://portal.edu.gva.es/iesjuandegaray/"><img
+                    src="https://portal.edu.gva.es/iesjuandegaray/wp-content/uploads/sites/594/2022/03/logo-Juan-de-Garay.png"
+                    alt="logo insti" width="100"></a>
+            <a href="#">Inicio</a>
+            <a href="historial.html">Historial</a>
+            <a href="admin.html">Acceso dministrativo</a>
+            <a href="contacto.html">Contacto</a>
+        </nav>
+        <div class="container">
+            <!-- Columna izquierda: Widget del tiempo -->
+            <div class="column">
+                <h2>Temperatura Exterior</h2>
+                <div id="tiempo_74ca4476ed71f2316b40e5fd46a58a5a">
+                    <div></div>
+                    <div> <img src="//www.tiempo.es/build/img/logo/tiempo133.png" width="80" height="18"
+                            alt="tiempo.es">
+                    </div>
+                    <script type="text/javascript"
+                        src="//www.tiempo.es/widload/es/ver/300/340/100/es0va0240/74ca4476ed71f2316b40e5fd46a58a5a.js"></script>
                 </div>
-                <script type="text/javascript"
-                    src="//www.tiempo.es/widload/es/ver/300/340/100/es0va0240/74ca4476ed71f2316b40e5fd46a58a5a.js"></script>
+            </div>
+
+            <!-- Columna derecha: Datos del Arduino -->
+            <div class="column">
+                <h2>Temperatura Interior</h2>
+                <p>Temperatura actual: <span id="temperature">Cargando...</span> °C</p>
+                <p>Ciudad: <span id="city">Cargando...</span></p>
+                <p>Latitud: <span id="latitude">Cargando...</span></p>
+                <p>Longitud: <span id="longitude">Cargando...</span></p>
             </div>
         </div>
-
-        <!-- Columna derecha: Datos del Arduino -->
-        <div class="column">
-            <h2>Temperatura Interior</h2>
-            <p>Temperatura actual: <span id="temperature">Cargando...</span> °C</p>
-            <p>Ciudad: <span id="city">Cargando...</span></p>
-            <p>Latitud: <span id="latitude">Cargando...</span></p>
-            <p>Longitud: <span id="longitude">Cargando...</span></p>
+    </section>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>Proyecto Sensor con arduino</h3>
+                <p>Monitoriza, analiza y toma decisiones informadas con nuestro sistema de sensores basado en Arduino.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="login.html">Acceso administrativo</a></li>
+                    <li><a href="historial.html">Historial</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h3>Contacto</h3>
+                <p><i class="fas fa-envelope"></i> josperchi2@alu.edu.gva.es</p>
+                <p><i class="fas fa-phone"></i> +34 123 456 789</p>
+                <p><i class="fas fa-map-marker-alt"></i> Carrer de Juan de Garay, 25, Patraix, 46017 València, Valencia</p>
+            </div>
         </div>
-    </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Proyecto Sensor arduino. Todos los derechos reservados.</p>
+        </div>
+    </footer>
     <script>
         function fetchData() {
             fetch('/getTemperature')
@@ -72,7 +113,83 @@
                 });
         }
         setInterval(fetchData, 10000);
-        fetchData(); 
+        fetchData();
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        ////Based on the Scroller function from @sallar
+        var $content = $('header .content')
+            , $blur = $('header .overlay')
+            , wHeight = $(window).height();
+
+        $(window).on('resize', function () {
+            wHeight = $(window).height();
+        });
+
+        window.requestAnimFrame = (function () {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 60);
+                };
+        })();
+
+        function Scroller() {
+            this.latestKnownScrollY = 0;
+            this.ticking = false;
+        }
+
+        Scroller.prototype = {
+
+            init: function () {
+                window.addEventListener('scroll', this.onScroll.bind(this), false);
+                $blur.css('background-image', $('header:first-of-type').css('background-image'));
+            },
+
+
+            onScroll: function () {
+                this.latestKnownScrollY = window.scrollY;
+                this.requestTick();
+            },
+
+
+            requestTick: function () {
+                if (!this.ticking) {
+                    window.requestAnimFrame(this.update.bind(this));
+                }
+                this.ticking = true;
+            },
+
+            update: function () {
+                var currentScrollY = this.latestKnownScrollY;
+                this.ticking = false;
+
+
+                var slowScroll = currentScrollY / 2
+                    , blurScroll = currentScrollY * 2
+                    , opaScroll = 1.4 - currentScrollY / 400;
+                if (currentScrollY > wHeight)
+                    $('nav').css('position', 'fixed');
+                else
+                    $('nav').css('position', 'absolute');
+
+                $content.css({
+                    'transform': 'translateY(' + slowScroll + 'px)',
+                    '-moz-transform': 'translateY(' + slowScroll + 'px)',
+                    '-webkit-transform': 'translateY(' + slowScroll + 'px)',
+                    'opacity': opaScroll
+                });
+
+                $blur.css({
+                    'opacity': blurScroll / wHeight
+                });
+            }
+        };
+
+
+        var scroller = new Scroller();
+        scroller.init();
     </script>
 </body>
 

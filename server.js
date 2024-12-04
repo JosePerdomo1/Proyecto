@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const { Pool } = require('pg');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const port = process.env.PORT || 10000;
 const pool = new Pool({
@@ -11,7 +11,7 @@ const pool = new Pool({
   }
 });
 app.use(express.static('public'));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 let latestTemperature = null;
 let latestCity = null;

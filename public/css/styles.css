@@ -1,62 +1,35 @@
-/* Body y barra de navegacion */
+/* Estilos generales */
 body {
     font-family: Arial, sans-serif;
+    font-size: 1.3em;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
 }
 
-nav {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
 }
 
-nav .links a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
+/* Tipografía */
+h2 {
+    text-align: center;
+    color: #333;
 }
 
-/* Definición de la animación */
-.fade-in {
-    opacity: 0; 
-    transform: translateY(20px); 
-    animation: fadeIn 1s ease-out forwards; 
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1; 
-        transform: translateY(0); 
-    }
-}
-
-
-
-#temperature {
-    font-size: 2em;
-    color: #ff5733;
-}
-.info {
-    font-size: 1.2em;
-    color: #555;
-}
- /* columnas */
- 
+/* Contenedor principal */
 .container {
     display: flex;
-    flex-wrap: wrap; /* Responsive */
+    flex-wrap: wrap;
     gap: 20px;
     padding: 20px;
 }
 
 .column {
     flex: 1;
-    min-width: 300px; 
+    min-width: 300px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -64,27 +37,133 @@ nav .links a {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    align-items: center; 
-    text-align: center; 
+    align-items: center;
+    text-align: center;
 }
 
-h2 {
+/* Texto informativo */
+.info {
+    font-size: 1.2em;
+    color: #555;
+}
+
+/* Estilos para el ID de temperatura */
+#temperature {
+    font-size: 2em;
+    color: #ff5733;
+}
+
+/* Encabezado */
+header {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: url(https://virtualbackgrounds.site/wp-content/uploads/2020/12/server-room-at-the-facebook-data-center.jpg) center no-repeat;
+    background-size: cover;
+}
+
+header .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
     text-align: center;
-    color: #333;
+    padding: 20px;
 }
-/* Widget responsivo */
-#tiempo_d68d5ce552833d419c6e93ca9c92666e {
-    max-width: 100%; 
-    display: flex;
-    justify-content: center;
+
+header h1, header h2 {
+    margin: 0;
 }
+
+header hgroup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    border: 5px solid #fff;
+    border-radius: 5px;
+    padding: 0.5em 3em;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+header .overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: #333 center no-repeat;
+    background-size: cover;
+    z-index: 0;
+    opacity: 0;
+    filter: blur(4px);
+}
+
+/* Imágenes */
+img {
+    margin-right: 20px;
+}
+
+.content img {
+    display: block;
+    margin: 0 auto 10px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Enlaces y navegación */
+.site {
+    padding: 20em 0;
+    text-align: center;
+    background-color: #efefef;
+    font-size: 0.8em;
+    color: #444;
+    position: relative;
+}
+
+.site a {
+    color: #666;
+    text-decoration: none;
+}
+
+.site a:hover {
+    color: #222;
+}
+
+.site nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #222;
+    width: 100%;
+}
+
+.site nav a {
+    padding: 10px 30px;
+    font-size: 1.3em;
+    display: inline-block;
+}
+
+.site nav a:hover {
+    background: #333;
+    color: #fff;
+}
+
+/* Estilo para iframes */
 iframe {
     width: 100%;
-    max-width: 400px; 
-    height: auto; 
+    max-width: 400px;
+    height: auto;
 }
 
-/* Ajustes para pantallas pequeñas */
+/* Responsivo para pantallas pequeñas */
 @media (max-width: 600px) {
     nav {
         flex-direction: column;
@@ -102,6 +181,66 @@ iframe {
     }
 
     .column {
-        width: 100%; 
+        width: 100%;
     }
+}
+/* Estilos para footer */
+.footer {
+    background-color: #333;
+    color: #f1f1f1;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 5%;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 10px;
+    min-width: 250px;
+}
+
+.footer-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #f1f1f1;
+}
+
+.footer-section p, .footer-section ul, .footer-section li, .footer-section a {
+    color: #dcdcdc;
+    text-decoration: none;
+    margin: 5px 0;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 5px;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+    color: #ff9800;
+}
+
+.footer-section p i {
+    margin-right: 8px;
+}
+
+.footer-bottom {
+    border-top: 1px solid #555;
+    margin-top: 20px;
+    padding-top: 10px;
+    font-size: 0.8rem;
+    color: #999;
 }

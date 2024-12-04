@@ -10,52 +10,82 @@
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="logo">Proyecto Sensores</div>
-        <div class="links">
+    <section class="site">
+        <nav>
+            <a href="https://portal.edu.gva.es/iesjuandegaray/"><img
+                    src="https://portal.edu.gva.es/iesjuandegaray/wp-content/uploads/sites/594/2022/03/logo-Juan-de-Garay.png"
+                    alt="logo insti" width="100"></a>
             <a href="index.html">Inicio</a>
-            <a href="mapa.html">Mapa</a>
             <a href="historial.html">Historial</a>
-            <a href="contacto.html">Contacto</a>
+            <a href="admin.html">Acceso dministrativo</a>
+            <a href="#">Contacto</a>
+        </nav>
+        <div class="contact-container">
+            <div class="contact-info">
+                <h1>CONTÁCTANOS</h1>
+                <p>Proyecto sensor cº con arduino</p>
+                <p>Carrer de Juan de Garay, 25, Patraix <br>46017 València<br>Valencia</p>
+                <p><span>📞</span><a href="tel:+34 123456789"> +34 123 456 789</a></p>
+                <p><span>📧</span> <a href="mailto:josperchi2@alu.edu.gva.es">josperchi2@alu.edu.gva.es</a></p>   
+                <a href="https://github.com/JosePerdomo1/Proyecto"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="img github" width="69px"></a>
+            </div>
+            <div class="contact-form">
+                <form id="contact-form" action="/send" method="post">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Nombre *" required>
+                    </div>
+                    <input type="email" name="email" placeholder="Correo electrónico *" required>
+                    <input type="text" name="subject" placeholder="Asunto*" required>
+                    <textarea name="message" placeholder="Mensaje" rows="5"></textarea>
+                    <div class="form-check">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">Marcando esta casilla, usted nos da permiso para usar su información personal
+                            de acuerdo al RGPD.</label>
+                    </div>
+                    <button type="submit">ENVIAR</button>
+                </form>
+                <div id="form-message" class="hidden"></div>
+            </div>
         </div>
-    </nav>
+    </section>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>Proyecto Sensor con arduino</h3>
+                <p>Monitoriza, analiza y toma decisiones informadas con nuestro sistema de sensores basado en Arduino.
+                </p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="login.html">Acceso administrativo</a></li>
+                    <li><a href="historial.html">Historial</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h3>Contacto</h3>
+                <p><i class="fas fa-envelope"></i> josperchi2@alu.edu.gva.es</p>
+                <p><i class="fas fa-phone"></i> +34 123 456 789</p>
+                <p><i class="fas fa-map-marker-alt"></i> Carrer de Juan de Garay, 25, Patraix, 46017 València, Valencia
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Proyecto Sensor arduino. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
-    <div class="form-container">
-        <h2>Contáctanos</h2>
-        <form action="/send" method="POST">
-            <div>
-                <label for="name">Nombre</label>
-                <input type="text" id="name" name="name" placeholder="Escribe tu nombre" required>
-            </div>
-            <div>
-                <label for="email">Correo</label>
-                <input type="email" id="email" name="email" placeholder="Escribe tu correo electrónico" required>
-            </div>
-            <div>
-                <label for="subject">Asunto</label>
-                <input type="text" id="subject" name="subject" placeholder="Escribe el asunto" required>
-            </div>
-            <div>
-                <label for="message">Mensaje</label>
-                <textarea id="message" name="message" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
-            </div>
-            <div class="checkbox-container">
-                <input type="checkbox" id="terms" name="terms" required>
-                <label for="terms">Acepto los términos y condiciones</label>
-            </div>
-            <button type="submit" class="submit-button">Enviar</button>
-            <div id="form-message" class="hidden"></div>
-        </form>
-    </div>
     <script>
         document.getElementById('contact-form').addEventListener('submit', async (e) => {
             e.preventDefault(); // Evita que el formulario se recargue
-    
+
             const formMessage = document.getElementById('form-message');
             formMessage.classList.add('hidden'); // Oculta el mensaje al enviar
-    
+
             const formData = new FormData(e.target); // Obtiene los datos del formulario
-    
+
             try {
                 const response = await fetch('/send', {
                     method: 'POST',
@@ -64,7 +94,7 @@
                     },
                     body: JSON.stringify(Object.fromEntries(formData)),
                 });
-    
+
                 if (response.ok) {
                     formMessage.textContent = 'Formulario enviado correctamente. ¡Gracias por tu mensaje!';
                     formMessage.classList.remove('hidden', 'error');
@@ -80,7 +110,7 @@
                 formMessage.classList.add('error');
             }
         });
-    </script>    
+    </script>
 </body>
 
 </html>

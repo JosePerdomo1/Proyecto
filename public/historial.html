@@ -36,7 +36,7 @@
                 <tbody id="sensor-data"></tbody>
             </table>
         </div>
-       
+
         <div id="results"></div>
         <div id="temperature-history">
             <h2>Historial de Temperaturas</h2>
@@ -98,66 +98,76 @@
     </footer>
 
     <script>
-        let allData = []; 
-    
+        let allData = [];  
+
         async function fetchData() {
             try {
                 const response = await fetch('/api/temperaturaHistorial');
                 const temperaturaHistorial = await response.json();
-                allData = temperaturaHistorial; 
-    
+                allData = temperaturaHistorial;  
+                console.log("Datos cargados: ", allData);  
+
                 
                 updateTable(temperaturaHistorial);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
-    
-       
+
+        
         function updateTable(data) {
             const tempTableBody = document.getElementById('temperature-data');
             tempTableBody.innerHTML = '';  
-    
+
+            if (data.length === 0) {
+                tempTableBody.innerHTML = '<tr><td colspan="6">No se encontraron datos</td></tr>';
+            }
+
             data.forEach(temp => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${temp.id}</td>
-                    <td>${new Date(temp.fecha).toLocaleString()}</td>
-                    <td>${temp.temperatura} °C</td>
-                    <td>${temp.sensor_id}</td>
-                    <td>${temp.ubicacion_id}</td>
-                    <td>${temp.comentarios}</td>
-                `;
+            <td>${temp.id}</td>
+            <td>${new Date(temp.fecha).toLocaleString()}</td>
+            <td>${temp.temperatura} °C</td>
+            <td>${temp.sensor_id}</td>
+            <td>${temp.ubicacion_id}</td>
+            <td>${temp.comentarios}</td>
+        `;
                 tempTableBody.appendChild(row);
             });
         }
-    
-        // Función para filtrar y actualizar la tabla
         document.getElementById('filter-form').addEventListener('submit', (event) => {
-            event.preventDefault();  
+            event.preventDefault(); 
+
             const formData = new FormData(event.target);
             const startDate = formData.get('startDate');
             const endDate = formData.get('endDate');
             const minTemp = formData.get('minTemp');
             const maxTemp = formData.get('maxTemp');
-    
+
+            console.log("Filtros aplicados: ", { startDate, endDate, minTemp, maxTemp }); 
+          
             const filteredData = allData.filter(item => {
                 const itemDate = new Date(item.fecha);
                 const filterStartDate = startDate ? new Date(startDate) : null;
                 const filterEndDate = endDate ? new Date(endDate) : null;
                 const filterMinTemp = minTemp ? parseFloat(minTemp) : -Infinity;
                 const filterMaxTemp = maxTemp ? parseFloat(maxTemp) : Infinity;
-    
+
                 const isDateInRange = (!filterStartDate || itemDate >= filterStartDate) && (!filterEndDate || itemDate <= filterEndDate);
                 const isTempInRange = item.temperatura >= filterMinTemp && item.temperatura <= filterMaxTemp;
-    
+
                 return isDateInRange && isTempInRange;
             });
-    
+
+            console.log("Datos filtrados: ", filteredData);  
+
+            
             updateTable(filteredData);
         });
-    
+
         document.addEventListener('DOMContentLoaded', fetchData);
+
     </script>
 </body>
 

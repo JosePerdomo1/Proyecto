@@ -121,6 +121,26 @@ app.post('/send', async (req, res) => {
     res.status(500).send('Hubo un error al procesar el formulario.');
   }
 });
+app.get('/api/sensores', async (_, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM sensores');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching sensors:', error);
+    res.status(500).send('Error al obtener los sensores');
+  }
+});
+app.get('/api/temperaturaHistorial', async (_, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM temperatura_historial');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching temperature history:', error);
+    res.status(500).send('Error al obtener el historial de temperaturas');
+  }
+});
+
+
 
 app.get('/', (_, res) => {
   const path = require('path');

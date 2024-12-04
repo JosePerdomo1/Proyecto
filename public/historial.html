@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial temperatura</title>
+    <link rel="stylesheet" href="./css/styles-historial.css">
+    <link rel="icon" href="https://cdn-icons-png.freepik.com/512/3380/3380402.png" type="image/x-icon">
+</head>
+
+<body>
+    <section class="site">
+        <nav>
+            <a href="https://portal.edu.gva.es/iesjuandegaray/"><img
+                    src="https://portal.edu.gva.es/iesjuandegaray/wp-content/uploads/sites/594/2022/03/logo-Juan-de-Garay.png"
+                    alt="logo insti" width="100"></a>
+            <a href="index.html">Inicio</a>
+            <a href="#">Historial</a>
+            <a href="admin.html">Acceso dministrativo</a>
+            <a href="contacto.html">Contacto</a>
+        </nav>
+        <h1>Bienvenido a los históricos de temperatura</h1>
+        <div id="sensor-table">
+            <h2>Tabla de Sensores</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody id="sensor-data"></tbody>
+            </table>
+        </div>
+
+        <div id="temperature-history">
+            <h2>Historial de Temperaturas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Temperatura</th>
+                        <th>Sensor</th>
+                        <th>Ubicacion_id</th>
+                        <th>Comentarios</th>
+                    </tr>
+                </thead>
+                <tbody id="temperature-data"></tbody>
+            </table>
+        </div>
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>Proyecto Sensor con arduino</h3>
+                    <p>Monitoriza, analiza y toma decisiones informadas con nuestro sistema de sensores basado en
+                        Arduino.
+                    </p>
+                </div>
+                <div class="footer-section links">
+                    <h3>Enlaces</h3>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="login.html">Acceso administrativo</a></li>
+                        <li><a href="historial.html">Historial</a></li>
+                        <li><a href="contacto.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contacto</h3>
+                    <p><i class="fas fa-envelope"></i> josperchi2@alu.edu.gva.es</p>
+                    <p><i class="fas fa-phone"></i> +34 123 456 789</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Carrer de Juan de Garay, 25, Patraix, 46017 València,
+                        Valencia
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Proyecto Sensor arduino. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+    </section>
+    <script>
+        // Función para obtener los datos de sensores y mostrar en la tabla
+        async function fetchData() {
+            try {
+                const response = await fetch('/api/sensores'); // Ruta donde el servidor devuelve los datos de sensores
+                const sensores = await response.json();
+
+                const sensorTableBody = document.getElementById('sensor-data');
+                sensores.forEach(sensor => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${sensor.id}</td>
+                        <td>${sensor.nombre}</td>
+                        <td>${sensor.tipo}</td>
+                        <td>${sensor.descripcion}</td>
+                    `;
+                    sensorTableBody.appendChild(row);
+                });
+
+                const tempResponse = await fetch('/api/temperaturaHistorial');
+                const temperaturaHistorial = await tempResponse.json();
+
+                const tempTableBody = document.getElementById('temperature-data');
+                temperaturaHistorial.forEach(temp => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${temp.id}</td>
+                        <td>${new Date(temp.fecha).toLocaleString()}</td>
+                        <td>${temp.temperatura} °C</td>
+                        <td>${temp.sensor_id}</td>
+                        <td>${temp.ubicacion_id}</td>
+                        <td>${temp.comentarios}</td>
+                    `;
+                    tempTableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Llamada a la función cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+</body>
+
+</html>

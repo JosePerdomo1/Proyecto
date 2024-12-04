@@ -98,43 +98,49 @@
     </footer>
 
     <script>
-        let allData = [];  // Aquí guardamos todos los datos sin filtrar
+        let allData = []; 
     
         async function fetchData() {
             try {
                 const response = await fetch('/api/temperaturaHistorial');
                 const temperaturaHistorial = await response.json();
-                allData = temperaturaHistorial;  // Guardar todos los datos en memoria
+                allData = temperaturaHistorial; 
     
-                const tempTableBody = document.getElementById('temperature-data');
-                temperaturaHistorial.forEach(temp => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${temp.id}</td>
-                        <td>${new Date(temp.fecha).toLocaleString()}</td>
-                        <td>${temp.temperatura} °C</td>
-                        <td>${temp.sensor_id}</td>
-                        <td>${temp.ubicacion_id}</td>
-                        <td>${temp.comentarios}</td>
-                    `;
-                    tempTableBody.appendChild(row);
-                });
+                
+                updateTable(temperaturaHistorial);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
     
+       
+        function updateTable(data) {
+            const tempTableBody = document.getElementById('temperature-data');
+            tempTableBody.innerHTML = '';  
+    
+            data.forEach(temp => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${temp.id}</td>
+                    <td>${new Date(temp.fecha).toLocaleString()}</td>
+                    <td>${temp.temperatura} °C</td>
+                    <td>${temp.sensor_id}</td>
+                    <td>${temp.ubicacion_id}</td>
+                    <td>${temp.comentarios}</td>
+                `;
+                tempTableBody.appendChild(row);
+            });
+        }
+    
         // Función para filtrar y actualizar la tabla
         document.getElementById('filter-form').addEventListener('submit', (event) => {
-            event.preventDefault();  // Prevenir el envío del formulario
-    
+            event.preventDefault();  
             const formData = new FormData(event.target);
             const startDate = formData.get('startDate');
             const endDate = formData.get('endDate');
             const minTemp = formData.get('minTemp');
             const maxTemp = formData.get('maxTemp');
     
-            // Filtrar los datos en memoria
             const filteredData = allData.filter(item => {
                 const itemDate = new Date(item.fecha);
                 const filterStartDate = startDate ? new Date(startDate) : null;
@@ -148,42 +154,10 @@
                 return isDateInRange && isTempInRange;
             });
     
-            // Limpiar la tabla antes de agregar los datos filtrados
-            const tempTableBody = document.getElementById('temperature-data');
-            tempTableBody.innerHTML = '';
-    
-            // Insertar los datos filtrados en la tabla
-            filteredData.forEach(temp => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${temp.id}</td>
-                    <td>${new Date(temp.fecha).toLocaleString()}</td>
-                    <td>${temp.temperatura} °C</td>
-                    <td>${temp.sensor_id}</td>
-                    <td>${temp.ubicacion_id}</td>
-                    <td>${temp.comentarios}</td>
-                `;
-                tempTableBody.appendChild(row);
-            });
+            updateTable(filteredData);
         });
     
-        // Cargar los datos cuando la página se haya cargado
         document.addEventListener('DOMContentLoaded', fetchData);
-    </script>
-    
-    <script>
-        document.getElementById('filter-form').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            const queryString = new URLSearchParams(formData).toString();
-    
-            const response = await fetch(`/api/temperaturaHistorial?${queryString}`);
-            const data = await response.json();
-    
-            // Mostrar resultados
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = JSON.stringify(data, null, 2);
-        });
     </script>
 </body>
 

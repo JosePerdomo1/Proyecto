@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const { Pool } = require('pg');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const port = process.env.PORT || 10000;
 const pool = new Pool({
@@ -11,7 +11,7 @@ const pool = new Pool({
   }
 });
 app.use(express.static('public'));
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 let latestTemperature = null;
 let latestCity = null;
@@ -82,7 +82,13 @@ app.get('/getTemperature', (_, res) => {
 });
 
 app.post('/send', async (req, res) => {
+  console.log(req.body); 
+
   const { name, email, subject, message, terms } = req.body;
+
+  if (!name || !email || !subject || !message) {
+    return res.status(400).send('Faltan campos requeridos');
+  }
 
   try {
     await pool.query(
@@ -115,7 +121,6 @@ app.post('/send', async (req, res) => {
     res.status(500).send('Hubo un error al procesar el formulario.');
   }
 });
-
 
 app.get('/', (_, res) => {
   const path = require('path');

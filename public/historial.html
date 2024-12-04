@@ -84,10 +84,9 @@
         </footer>
     </section>
     <script>
-        // Función para obtener los datos de sensores y mostrar en la tabla
         async function fetchData() {
             try {
-                const response = await fetch('/api/sensores'); // Ruta donde el servidor devuelve los datos de sensores
+                const response = await fetch('/api/sensores'); 
                 const sensores = await response.json();
 
                 const sensorTableBody = document.getElementById('sensor-data');
@@ -123,8 +122,24 @@
             }
         }
 
-        // Llamada a la función cuando la página esté lista
+        
         document.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+      <script>    
+        window.onscroll = function() {
+            addStickyClass();
+        };
+
+        var navbar = document.querySelector('.site nav'); 
+        var sticky = navbar.offsetTop; 
+
+        function addStickyClass() {
+            if (window.pageYOffset >= sticky) {
+                navbar.classList.add('sticky'); 
+            } else {
+                navbar.classList.remove('sticky'); 
+            }
+        }
     </script>
 </body>
 

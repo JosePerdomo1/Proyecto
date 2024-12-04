@@ -6,18 +6,18 @@ body {
     color: white;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Asegura que el footer se quede pegado al final */
+    min-height: 100vh;
 }
 
 /* Enlaces y navegación */
 .site {
-    padding: 2em 0; /* Alineación de la página */
+    padding: 10em 0;
     text-align: center;
     background-color: #efefef;
     font-size: 0.8em;
     color: #444;
     position: relative;
-    flex: 1; /* Asegura que la sección ocupe el espacio restante */
+    flex: 1;
 }
 
 .page-container {
@@ -41,12 +41,20 @@ body {
     left: 0;
     background: #222;
     width: 100%;
+    z-index: 10; 
+    transition: top 0.3s; 
 }
 
 .site nav a {
     padding: 10px 30px;
     font-size: 1.3em;
     display: inline-block;
+}
+.sticky {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
 }
 
 .site nav a:hover {
@@ -58,6 +66,7 @@ body {
 h1 {
     text-align: center;
     font-size: 2.5rem;
+    margin-top: 80px; 
     margin-bottom: 30px;
     color: #333;
 }
@@ -118,7 +127,7 @@ a:hover {
     padding: 20px 0;
     text-align: center;
     font-size: 0.9rem;
-    margin-top: auto; /* Asegura que el footer se quede al final de la página */
+    margin-top: auto; 
 }
 
 .footer-content {
@@ -169,7 +178,6 @@ a:hover {
 }
 
 .footer-bottom {
-    border-top: 1px solid #555;
     margin-top: 20px;
     padding-top: 10px;
     font-size: 0.8rem;

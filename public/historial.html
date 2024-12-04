@@ -20,6 +20,7 @@
             <a href="admin.html">Acceso dministrativo</a>
             <a href="contacto.html">Contacto</a>
         </nav>
+
         <h1>Bienvenido a los históricos de temperatura</h1>
         <div id="sensor-table">
             <h2>Tabla de Sensores</h2>
@@ -35,9 +36,21 @@
                 <tbody id="sensor-data"></tbody>
             </table>
         </div>
-
+       
+        <div id="results"></div>
         <div id="temperature-history">
             <h2>Historial de Temperaturas</h2>
+            <form id="filter-form">
+                <label for="startDate">Desde:</label>
+                <input type="date" id="startDate" name="startDate">
+                <label for="endDate">Hasta:</label>
+                <input type="date" id="endDate" name="endDate">
+                <label for="minTemp">Temp. Mín:</label>
+                <input type="number" id="minTemp" name="minTemp">
+                <label for="maxTemp">Temp. Máx:</label>
+                <input type="number" id="maxTemp" name="maxTemp">
+                <button type="submit">Filtrar</button>
+            </form>
             <table>
                 <thead>
                     <tr>
@@ -52,58 +65,47 @@
                 <tbody id="temperature-data"></tbody>
             </table>
         </div>
-        <footer class="footer">
-            <div class="footer-content">
-                <div class="footer-section about">
-                    <h3>Proyecto Sensor con arduino</h3>
-                    <p>Monitoriza, analiza y toma decisiones informadas con nuestro sistema de sensores basado en
-                        Arduino.
-                    </p>
-                </div>
-                <div class="footer-section links">
-                    <h3>Enlaces</h3>
-                    <ul>
-                        <li><a href="index.html">Inicio</a></li>
-                        <li><a href="login.html">Acceso administrativo</a></li>
-                        <li><a href="historial.html">Historial</a></li>
-                        <li><a href="contacto.html">Contacto</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section contact">
-                    <h3>Contacto</h3>
-                    <p><i class="fas fa-envelope"></i> josperchi2@alu.edu.gva.es</p>
-                    <p><i class="fas fa-phone"></i> +34 123 456 789</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Carrer de Juan de Garay, 25, Patraix, 46017 València,
-                        Valencia
-                    </p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Proyecto Sensor arduino. Todos los derechos reservados.</p>
-            </div>
-        </footer>
     </section>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>Proyecto Sensor con arduino</h3>
+                <p>Monitoriza, analiza y toma decisiones informadas con nuestro sistema de sensores basado en
+                    Arduino.
+                </p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="login.html">Acceso administrativo</a></li>
+                    <li><a href="historial.html">Historial</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h3>Contacto</h3>
+                <p><i class="fas fa-envelope"></i> josperchi2@alu.edu.gva.es</p>
+                <p><i class="fas fa-phone"></i> +34 123 456 789</p>
+                <p><i class="fas fa-map-marker-alt"></i> Carrer de Juan de Garay, 25, Patraix, 46017 València,
+                    Valencia
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Proyecto Sensor arduino. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
     <script>
+        let allData = [];  // Aquí guardamos todos los datos sin filtrar
+    
         async function fetchData() {
             try {
-                const response = await fetch('/api/sensores'); 
-                const sensores = await response.json();
-
-                const sensorTableBody = document.getElementById('sensor-data');
-                sensores.forEach(sensor => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${sensor.id}</td>
-                        <td>${sensor.nombre}</td>
-                        <td>${sensor.tipo}</td>
-                        <td>${sensor.descripcion}</td>
-                    `;
-                    sensorTableBody.appendChild(row);
-                });
-
-                const tempResponse = await fetch('/api/temperaturaHistorial');
-                const temperaturaHistorial = await tempResponse.json();
-
+                const response = await fetch('/api/temperaturaHistorial');
+                const temperaturaHistorial = await response.json();
+                allData = temperaturaHistorial;  // Guardar todos los datos en memoria
+    
                 const tempTableBody = document.getElementById('temperature-data');
                 temperaturaHistorial.forEach(temp => {
                     const row = document.createElement('tr');
@@ -121,25 +123,67 @@
                 console.error('Error fetching data:', error);
             }
         }
-
-        
+    
+        // Función para filtrar y actualizar la tabla
+        document.getElementById('filter-form').addEventListener('submit', (event) => {
+            event.preventDefault();  // Prevenir el envío del formulario
+    
+            const formData = new FormData(event.target);
+            const startDate = formData.get('startDate');
+            const endDate = formData.get('endDate');
+            const minTemp = formData.get('minTemp');
+            const maxTemp = formData.get('maxTemp');
+    
+            // Filtrar los datos en memoria
+            const filteredData = allData.filter(item => {
+                const itemDate = new Date(item.fecha);
+                const filterStartDate = startDate ? new Date(startDate) : null;
+                const filterEndDate = endDate ? new Date(endDate) : null;
+                const filterMinTemp = minTemp ? parseFloat(minTemp) : -Infinity;
+                const filterMaxTemp = maxTemp ? parseFloat(maxTemp) : Infinity;
+    
+                const isDateInRange = (!filterStartDate || itemDate >= filterStartDate) && (!filterEndDate || itemDate <= filterEndDate);
+                const isTempInRange = item.temperatura >= filterMinTemp && item.temperatura <= filterMaxTemp;
+    
+                return isDateInRange && isTempInRange;
+            });
+    
+            // Limpiar la tabla antes de agregar los datos filtrados
+            const tempTableBody = document.getElementById('temperature-data');
+            tempTableBody.innerHTML = '';
+    
+            // Insertar los datos filtrados en la tabla
+            filteredData.forEach(temp => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${temp.id}</td>
+                    <td>${new Date(temp.fecha).toLocaleString()}</td>
+                    <td>${temp.temperatura} °C</td>
+                    <td>${temp.sensor_id}</td>
+                    <td>${temp.ubicacion_id}</td>
+                    <td>${temp.comentarios}</td>
+                `;
+                tempTableBody.appendChild(row);
+            });
+        });
+    
+        // Cargar los datos cuando la página se haya cargado
         document.addEventListener('DOMContentLoaded', fetchData);
     </script>
-      <script>    
-        window.onscroll = function() {
-            addStickyClass();
-        };
-
-        var navbar = document.querySelector('.site nav'); 
-        var sticky = navbar.offsetTop; 
-
-        function addStickyClass() {
-            if (window.pageYOffset >= sticky) {
-                navbar.classList.add('sticky'); 
-            } else {
-                navbar.classList.remove('sticky'); 
-            }
-        }
+    
+    <script>
+        document.getElementById('filter-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const queryString = new URLSearchParams(formData).toString();
+    
+            const response = await fetch(`/api/temperaturaHistorial?${queryString}`);
+            const data = await response.json();
+    
+            // Mostrar resultados
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = JSON.stringify(data, null, 2);
+        });
     </script>
 </body>
 

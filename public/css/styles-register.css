@@ -1,0 +1,161 @@
+/* Estilo base */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Enlaces y navegación */
+.site {
+    padding: 10em 0;
+    text-align: center;
+    background-color: #efefef;
+    font-size: 0.8em;
+    color: #444;
+    position: relative;
+    flex: 1;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.site a {
+    color: #666;
+    text-decoration: none;
+}
+
+.site a:hover {
+    color: #222;
+}
+
+.site nav {
+    position: fixed;   
+    top: 0;
+    left: 0;
+    background: #222;
+    width: 100%;
+    z-index: 10; 
+    transition: top 0.3s; 
+}
+
+.site nav a {
+    padding: 10px 30px;
+    font-size: 1.3em;
+    display: inline-block;
+}
+.sticky {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.site nav a:hover {
+    background: #333;
+    color: #fff;
+}
+
+/* Estilo para el título */
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-top: 80px; 
+    margin-bottom: 30px;
+    color: #333;
+}
+
+h2 {
+    color: #333;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Estilos para footer */
+.footer {
+    background-color: #333;
+    color: #f1f1f1;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 5%;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 10px;
+    min-width: 250px;
+}
+
+.footer-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #f1f1f1;
+}
+
+.footer-section p,
+.footer-section ul,
+.footer-section li,
+.footer-section a {
+    color: #dcdcdc;
+    text-decoration: none;
+    margin: 5px 0;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 5px;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+    color: #ff9800;
+}
+
+.footer-section p i {
+    margin-right: 8px;
+}
+
+.footer-bottom {
+    margin-top: 20px;
+    padding-top: 10px;
+    font-size: 0.8rem;
+    color: #999;
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+    .contact-container {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .contact-info,
+    .contact-form {
+        max-width: 100%;
+    }
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

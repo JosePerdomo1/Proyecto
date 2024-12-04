@@ -1,4 +1,6 @@
 const express = require('express');
+const session = require('express-session');
+const bcrypt = require('bcryptjs');
 const app = express();
 const { Pool } = require('pg');
 const bodyParser = require('body-parser');
@@ -12,25 +14,105 @@ const pool = new Pool({
 });
 app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 let latestTemperature = null;
 let latestCity = null;
 let latestLatitude = null;
 let latestLongitude = null;
-app.use(express.urlencoded({ extended: true })); 
+
+app.use(session({
+  secret: process.env.PASSADMIN,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true } 
+}));
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const result = await pool.query('SELECT * FROM usuarios WHERE username = $1', [username]);
+
+    if (result.rows.length === 0) {
+      return res.status(400).send('Usuario no encontrado');
+    }
+
+    const user = result.rows[0];
+
+    // Verificar la contraseña usando bcrypt
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).send('Contraseña incorrecta');
+    }
+
+    // Establecer la sesión
+    req.session.userId = user.id;
+    req.session.username = user.username;
+
+    res.send('Inicio de sesión exitoso');
+  } catch (error) {
+    console.error('Error de inicio de sesión:', error);
+    res.status(500).send('Error al procesar la solicitud');
+  }
+});
+function isAuthenticated(req, res, next) {
+  if (!req.session.userId) {
+    return res.status(403).send('Acceso denegado. Debes iniciar sesión');
+  }
+  next();
+}
+
+
+app.get('/admin', isAuthenticated, (req, res) => {
+  res.send('Bienvenido a la página de administración');
+});
+app.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).send('Error al cerrar sesión');
+    }
+    res.send('Sesión cerrada con éxito');
+  });
+});
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    // Verificar si el usuario ya existe
+    const result = await pool.query('SELECT * FROM usuarios WHERE username = $1', [username]);
+
+    if (result.rows.length > 0) {
+      return res.status(400).send('El usuario ya existe');
+    }
+
+    // Encriptar la contraseña
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Insertar el nuevo usuario en la base de datos
+    const newUser = await pool.query('INSERT INTO usuarios (username, password) VALUES ($1, $2) RETURNING *', [username, hashedPassword]);
+
+    res.status(201).send('Usuario registrado con éxito');
+  } catch (error) {
+    console.error('Error al registrar usuario:', error);
+    res.status(500).send('Error al registrar el usuario');
+  }
+});
+
 
 app.post('/temperature', async (req, res) => {
   const temperature = parseFloat(req.query.temp);
-    const city = req.query.city;
-    const latitude = parseFloat(req.query.lat);
-    const longitude = parseFloat(req.query.lon);
+  const city = req.query.city;
+  const latitude = parseFloat(req.query.lat);
+  const longitude = parseFloat(req.query.lon);
 
-    if (!isNaN(temperature) && city && !isNaN(latitude) && !isNaN(longitude)) {
-        latestTemperature = temperature;
-        latestCity = city;
-        latestLatitude = latitude;
-        latestLongitude = longitude;
-        console.log(`Datos recibidos:
+  if (!isNaN(temperature) && city && !isNaN(latitude) && !isNaN(longitude)) {
+    latestTemperature = temperature;
+    latestCity = city;
+    latestLatitude = latitude;
+    latestLongitude = longitude;
+    console.log(`Datos recibidos:
         Temperatura: ${temperature}°C
         Ciudad: ${city}
         Latitud: ${latitude}
@@ -82,7 +164,7 @@ app.get('/getTemperature', (_, res) => {
 });
 
 app.post('/send', async (req, res) => {
-  console.log(req.body); 
+  console.log(req.body);
 
   const { name, email, subject, message, terms } = req.body;
 

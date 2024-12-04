@@ -15,7 +15,7 @@
             <a href="https://portal.edu.gva.es/iesjuandegaray/"><img
                     src="https://portal.edu.gva.es/iesjuandegaray/wp-content/uploads/sites/594/2022/03/logo-Juan-de-Garay.png"
                     alt="logo insti" width="100"></a>
-            <a href="#">Inicio</a>
+            <a href="index.html">Inicio</a>
             <a href="historial.html">Historial</a>
             <a href="login.html">Acceso dministrativo</a>
             <a href="contacto.html">Contacto</a>
@@ -28,7 +28,7 @@
             <input type="password" id="password" name="password" required>
             <button type="submit">Login</button>
         </form>
-    
+
         <button id="register-button">Registro</button>
     </section>
     <footer class="footer">
@@ -60,19 +60,27 @@
         </div>
     </footer>
     <script>
-        document.getElementById('register-button').addEventListener('click', () => {
-            const adminPassword = prompt("Introduce la contraseña de administrador:");
+        document.getElementById('register-btn').addEventListener('click', async () => {
+            const adminPassword = prompt('Introduce la contraseña de administrador:');
 
-            if (adminPassword === null) {
-                return; // Cancelado por el usuario
-            }
+            if (!adminPassword) return; // Si el usuario cancela el prompt
 
-            
-            if (adminPassword === process.env.PASSADMIN ) {
-                alert("Contraseña correcta. Redirigiendo al registro...");
-                window.location.href = "registro.html"; // Redirige a la página de registro
-            } else {
-                alert("Contraseña incorrecta. No tienes acceso.");
+            try {
+                const response = await fetch('/api/validate-admin-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: adminPassword }),
+                });
+
+                if (response.ok) {
+                    // Redirige a la página de registro
+                    window.location.href = 'registro.html';
+                } else {
+                    alert('Contraseña incorrecta. No tienes permiso para registrar nuevos usuarios.');
+                }
+            } catch (error) {
+                console.error('Error al validar la contraseña:', error);
+                alert('Hubo un problema al validar la contraseña.');
             }
         });
 

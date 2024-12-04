@@ -62,6 +62,15 @@ function isAuthenticated(req, res, next) {
   }
   next();
 }
+app.post('/api/validate-admin-password', (req, res) => {
+  const { password } = req.body;
+
+  if (password === process.env.PASSADMIN) {
+      res.status(200).send('Validado');
+  } else {
+      res.status(401).send('Contraseña incorrecta');
+  }
+});
 
 
 app.get('/admin', isAuthenticated, (req, res) => {

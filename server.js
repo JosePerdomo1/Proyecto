@@ -234,8 +234,15 @@ app.get('/api/temperaturaHistorial', async (_, res) => {
     res.status(500).send('Error al obtener el historial de temperaturas');
   }
 });
-
-
+app.get('/api/formulario_contacto', async (_, res) => {
+  try {
+      const result = await pool.query('SELECT * FROM formulario_contacto');
+      res.json(result.rows);
+  } catch (error) {
+      console.error('Error al obtener los mensajes del formulario de contacto:', error);
+      res.status(500).send('Error al obtener los mensajes');
+  }
+});
 
 app.get('/', (_, res) => {
   const path = require('path');

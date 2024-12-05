@@ -41,11 +41,6 @@ h2 {
     text-align: center;
 }
 
-/* Texto informativo */
-.info {
-    font-size: 1.2em;
-    color: #555;
-}
 
 /* Estilos para el ID de temperatura */
 #temperature {

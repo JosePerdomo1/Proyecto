@@ -1,3 +1,36 @@
+
+/* Tablas */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
+}
+
+.reply-button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.reply-button:hover {
+    background-color: #0056b3;
+    color: white;
+}
 /* Estilo base */
 body {
     margin: 0;

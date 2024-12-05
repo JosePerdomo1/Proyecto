@@ -23,14 +23,20 @@
     </header>
     <section class="site">
         <nav>
-            <a
-                href="https://portal.edu.gva.es/iesjuandegaray/"><img
+            <a href="https://portal.edu.gva.es/iesjuandegaray/"><img
                     src="https://portal.edu.gva.es/iesjuandegaray/wp-content/uploads/sites/594/2022/03/logo-Juan-de-Garay.png"
                     alt="logo insti" width="100"></a>
-            <a href="#">Inicio</a>
-            <a href="historial.html">Historial</a>
-            <a href="login.html">Acceso dministrativo</a>
-            <a href="contacto.html">Contacto</a>
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="historial.html">Historial</a></li>
+                <li><a href="login.html">Acceso administrativo</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+            <button class="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
         <div class="container">
             <!-- Columna izquierda: Widget del tiempo -->
@@ -60,7 +66,8 @@
         <div class="footer-content">
             <div class="footer-section about">
                 <h3>Proyecto Sensor con arduino</h3>
-                <p>Monitoriza, analiza y toma decisiones informadas con nuestro sistema de sensores basado en Arduino.</p>
+                <p>Monitoriza, analiza y toma decisiones informadas con nuestro sistema de sensores basado en Arduino.
+                </p>
             </div>
             <div class="footer-section links">
                 <h3>Enlaces</h3>
@@ -75,13 +82,25 @@
                 <h3>Contacto</h3>
                 <p><i class="fas fa-envelope"></i> josperchi2@alu.edu.gva.es</p>
                 <p><i class="fas fa-phone"></i> +34 123 456 789</p>
-                <p><i class="fas fa-map-marker-alt"></i> Carrer de Juan de Garay, 25, Patraix, 46017 València, Valencia</p>
+                <p><i class="fas fa-map-marker-alt"></i> Carrer de Juan de Garay, 25, Patraix, 46017 València, Valencia
+                </p>
             </div>
         </div>
         <div class="footer-bottom">
             <p>&copy; 2024 Proyecto Sensor arduino. Todos los derechos reservados.</p>
         </div>
     </footer>
+    <script>
+        // Selecciona el botón hamburguesa y el menú
+        const hamburger = document.querySelector('.hamburger');
+        const menu = document.querySelector('.menu');
+
+        // Agrega un event listener al botón
+        hamburger.addEventListener('click', () => {
+            menu.classList.toggle('active'); // Activa/desactiva el menú
+            hamburger.classList.toggle('open'); // Cambia el estilo del botón si lo deseas
+        });
+    </script>
     <script>
         function fetchData() {
             fetch('/getTemperature')

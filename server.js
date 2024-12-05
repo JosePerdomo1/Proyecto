@@ -46,10 +46,6 @@ app.post('/login', async (req, res) => {
     if (!isMatch) {
       return res.status(400).send('Contraseña incorrecta');
     }
-    console.log('Username ingresado:', username);
-    console.log('Contraseña ingresada:', password);
-    console.log('Resultado de la consulta:', result.rows);
-
     // Establecer la sesión
     req.session.userId = user.id;
     req.session.username = user.username;

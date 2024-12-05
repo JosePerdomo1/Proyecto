@@ -11,6 +11,7 @@ html, body {
     height: 100%;
     padding: 0;
     margin: 0;
+    overflow-x: hidden; /* Evita el desbordamiento horizontal */
 }
 
 /* Tipografía */
@@ -158,27 +159,7 @@ iframe {
     height: auto;
 }
 
-/* Responsivo para pantallas pequeñas */
-@media (max-width: 600px) {
-    nav {
-        flex-direction: column;
-        align-items: flex-start;
-    }
 
-    nav .links {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .column {
-        width: 100%;
-    }
-}
 /* Estilos para footer */
 .footer {
     background-color: #333;
@@ -239,3 +220,78 @@ iframe {
     font-size: 0.8rem;
     color: #999;
 }
+
+/* Estilo base para el nav */
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #007bff;
+    padding: 0.5rem 1rem;
+    overflow-x: hidden;
+}
+
+.menu {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+/* Ajustar el botón hamburguesa */
+.hamburger {
+    margin-right: 20px;
+    display: none;
+    flex-direction: column;
+    gap: 0.3rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    z-index: 1000;
+    padding: 10px; /* Añadir un poco de padding para evitar que se solapen */
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+/* Ocultar el menú en móvil por defecto */
+.menu {
+    display: flex;
+}
+
+.menu.active {
+    display: flex; /* Muestra el menú desplegable */
+    flex-direction: column;
+    background-color: #007bff;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Media query para móviles */
+@media (max-width: 768px) {
+    .menu {
+        display: none; /* Oculta el menú en móviles por defecto */
+    }
+
+    .hamburger {
+        display: flex; /* Muestra el botón hamburguesa en móviles */
+    }
+}
+

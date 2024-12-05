@@ -24,12 +24,13 @@
         <h1>Panel Administrativo</h1>
         <section id="message-board">
             <h2>Mensajes Recibidos</h2>
+            <div style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
-                        <th>Email</th>
+                        <th>correo</th>
                         <th>Asunto</th>
                         <th>Mensaje</th>
                         <th>Responder</th>
@@ -86,11 +87,11 @@
                     row.innerHTML = `
                         <td>${msg.id}</td>
                         <td>${msg.nombre}</td>
-                        <td>${msg.email}</td>
+                        <td>${msg.correo}</td>
                         <td>${msg.asunto}</td>
                         <td>${msg.mensaje}</td>
                         <td>
-                            <a href="mailto:${msg.email}?subject=${encodeURIComponent(msg.asunto)}" class="reply-button">
+                            <a href="mailto: ${msg.correo}?subject=${encodeURIComponent(msg.asunto)}" target="_blank" class="reply-button">
                                 Responder
                             </a>
                         </td>

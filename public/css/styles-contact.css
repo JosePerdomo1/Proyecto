@@ -27,7 +27,7 @@ body {
 }
 
 .site a {
-    color: #666;
+    color: white;
     text-decoration: none;
 }
 
@@ -227,6 +227,6 @@ button:hover {
 
     .contact-info,
     .contact-form {
-        max-width: 100%;
+        max-width: 95%;
     }
 }

@@ -5,6 +5,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    min-width: 800px; 
 }
 
 th, td {
@@ -60,7 +61,7 @@ body {
 }
 
 .site a {
-    color: #666;
+    color: white;
     text-decoration: none;
 }
 

@@ -15,12 +15,18 @@
             <a href="https://portal.edu.gva.es/iesjuandegaray/"><img
                     src="https://portal.edu.gva.es/iesjuandegaray/wp-content/uploads/sites/594/2022/03/logo-Juan-de-Garay.png"
                     alt="logo insti" width="100"></a>
-            <a href="index.html">Inicio</a>
-            <a href="#">Historial</a>
-            <a href="login.html">Acceso dministrativo</a>
-            <a href="contacto.html">Contacto</a>
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="historial.html">Historial</a></li>
+                <li><a href="login.html">Acceso administrativo</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+            <button class="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
-
         <h1>Consulta históricos de temperatura</h1>
         <div id="sensor-table">
             <h2>Tabla de Sensores</h2>
@@ -37,33 +43,33 @@
             </table>
         </div>
 
-        <div id="results"></div>   
-            <h2>Historial de Temperaturas</h2>
-            <form id="filter-form">
-                <label for="startDate">Desde:</label>
-                <input type="date" id="startDate" name="startDate">
-                <label for="endDate">Hasta:</label>
-                <input type="date" id="endDate" name="endDate">
-                <label for="minTemp">Temp. Mín:</label>
-                <input type="number" id="minTemp" name="minTemp">
-                <label for="maxTemp">Temp. Máx:</label>
-                <input type="number" id="maxTemp" name="maxTemp">
-                <button type="submit">Filtrar</button>
-            </form>
-            <div id="temperature-history"></div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Fecha</th>
-                        <th>Temperatura</th>
-                        <th>Sensor</th>
-                        <th>Ubicacion_id</th>
-                        <th>Comentarios</th>
-                    </tr>
-                </thead>
-                <tbody id="temperature-data"></tbody>
-            </table>
+        <div id="results"></div>
+        <h2>Historial de Temperaturas</h2>
+        <form id="filter-form">
+            <label for="startDate">Desde:</label>
+            <input type="date" id="startDate" name="startDate">
+            <label for="endDate">Hasta:</label>
+            <input type="date" id="endDate" name="endDate">
+            <label for="minTemp">Temp. Mín:</label>
+            <input type="number" id="minTemp" name="minTemp">
+            <label for="maxTemp">Temp. Máx:</label>
+            <input type="number" id="maxTemp" name="maxTemp">
+            <button type="submit">Filtrar</button>
+        </form>
+        <div id="temperature-history"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Temperatura</th>
+                    <th>Sensor</th>
+                    <th>Ubicacion_id</th>
+                    <th>Comentarios</th>
+                </tr>
+            </thead>
+            <tbody id="temperature-data"></tbody>
+        </table>
         </div>
     </section>
     <footer class="footer">
@@ -96,36 +102,67 @@
             <p>&copy; 2024 Proyecto Sensor arduino. Todos los derechos reservados.</p>
         </div>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            function checkNavPosition() {
+                const nav = document.querySelector('nav');
+                const menu = document.querySelector('.menu');
+                const hamburger = document.querySelector('.hamburger');
 
+                
+                if (nav.style.position === 'absolute') {
+                    menu.classList.remove('active');
+                    hamburger.disabled = true;  
+                } else {
+                    hamburger.disabled = false; 
+                }
+            }
+
+            window.addEventListener('scroll', function () {
+                checkNavPosition();
+            });
+            const hamburger = document.querySelector('.hamburger');
+            const menu = document.querySelector('.menu');
+
+            hamburger.addEventListener('click', () => {
+                menu.classList.toggle('active');
+            });
+            document.addEventListener('click', (event) => {
+                if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+                    menu.classList.remove('active');
+                }
+            });
+        });
+    </script>
     <script>
         let allData = [];
         let sensorData = [];
 
-        
+
         async function fetchData() {
             try {
-               
+
                 const sensorResponse = await fetch('/api/sensores');
                 sensorData = await sensorResponse.json();
                 console.log("Datos de sensores:", sensorData);
                 displaySensors();
 
-                
+
                 const tempResponse = await fetch('/api/temperaturaHistorial');
                 const temperaturaHistorial = await tempResponse.json();
                 allData = temperaturaHistorial;
                 console.log("Datos de temperaturas:", allData);
 
-                updateTable(temperaturaHistorial);  
+                updateTable(temperaturaHistorial);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
 
-       
+
         function displaySensors() {
             const sensorTableBody = document.getElementById('sensor-data');
-            sensorTableBody.innerHTML = ''; 
+            sensorTableBody.innerHTML = '';
 
             if (sensorData.length === 0) {
                 sensorTableBody.innerHTML = '<tr><td colspan="4">No se encontraron sensores</td></tr>';
@@ -143,7 +180,7 @@
             });
         }
 
-        
+
         function updateTable(data) {
             const tempTableBody = document.getElementById('temperature-data');
             tempTableBody.innerHTML = '';
@@ -166,9 +203,9 @@
             });
         }
 
-        
+
         document.getElementById('filter-form').addEventListener('submit', (event) => {
-            event.preventDefault();  
+            event.preventDefault();
 
             const formData = new FormData(event.target);
             const startDate = formData.get('startDate');
@@ -189,10 +226,10 @@
                 return isDateInRange && isTempInRange;
             });
 
-            updateTable(filteredData); 
+            updateTable(filteredData);
         });
 
-        
+
         document.addEventListener('DOMContentLoaded', fetchData);
     </script>
 </body>

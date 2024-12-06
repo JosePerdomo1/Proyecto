@@ -15,10 +15,17 @@
             <a href="https://portal.edu.gva.es/iesjuandegaray/"><img
                     src="https://portal.edu.gva.es/iesjuandegaray/wp-content/uploads/sites/594/2022/03/logo-Juan-de-Garay.png"
                     alt="logo insti" width="100"></a>
-            <a href="index.html">Inicio</a>
-            <a href="historial.html">Historial</a>
-            <a href="login.html">Acceso dministrativo</a>
-            <a href="#">Contacto</a>
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="historial.html">Historial</a></li>
+                <li><a href="login.html">Acceso administrativo</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+            <button class="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
         <div class="contact-container">
             <div class="contact-info">
@@ -75,15 +82,50 @@
             <p>&copy; 2024 Proyecto Sensor arduino. Todos los derechos reservados.</p>
         </div>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Función para verificar si el nav tiene position: absolute
+            function checkNavPosition() {
+                const nav = document.querySelector('nav');
+                const menu = document.querySelector('.menu');
+                const hamburger = document.querySelector('.hamburger');
 
+                // Si el nav tiene position: absolute, cerramos el menú y deshabilitamos el botón hamburguesa
+                if (nav.style.position === 'absolute') {
+                    menu.classList.remove('active');
+                    hamburger.disabled = true;  // Deshabilitar el botón hamburguesa
+                } else {
+                    hamburger.disabled = false; // Habilitar el botón hamburguesa
+                }
+            }
+
+            // Detectar el cambio en la posición de `nav` mientras hacemos scroll
+            window.addEventListener('scroll', function () {
+                checkNavPosition();
+            });
+            const hamburger = document.querySelector('.hamburger');
+            const menu = document.querySelector('.menu');
+
+            hamburger.addEventListener('click', () => {
+                menu.classList.toggle('active');
+            });
+
+            // Cerrar el menú si se hace clic fuera de él
+            document.addEventListener('click', (event) => {
+                if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+                    menu.classList.remove('active');
+                }
+            });
+        });
+    </script>
     <script>
         document.getElementById('contact-form').addEventListener('submit', async (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
 
             const formMessage = document.getElementById('form-message');
-            formMessage.classList.add('hidden'); 
+            formMessage.classList.add('hidden');
 
-            const formData = new FormData(e.target); 
+            const formData = new FormData(e.target);
 
             try {
                 const response = await fetch('/send', {
@@ -98,7 +140,7 @@
                     formMessage.textContent = 'Formulario enviado correctamente. ¡Gracias por tu mensaje!';
                     formMessage.classList.remove('hidden', 'error');
                     formMessage.classList.add('success');
-                    e.target.reset(); 
+                    e.target.reset();
                 } else {
                     const errorText = await response.text();
                     throw new Error(errorText || 'Error desconocido');

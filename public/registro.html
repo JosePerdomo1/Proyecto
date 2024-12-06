@@ -15,17 +15,26 @@
             <a href="https://portal.edu.gva.es/iesjuandegaray/"><img
                     src="https://portal.edu.gva.es/iesjuandegaray/wp-content/uploads/sites/594/2022/03/logo-Juan-de-Garay.png"
                     alt="logo insti" width="100"></a>
-            <a href="index.html">Inicio</a>
-            <a href="historial.html">Historial</a>
-            <a href="login.html">Acceso dministrativo</a>
-            <a href="contacto.html">Contacto</a>
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="historial.html">Historial</a></li>
+                <li><a href="login.html">Acceso administrativo</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+            <button class="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
         <h1>Registrar nuevo usuario</h1>
         <form id="register-form">
             <label for="username">Usuario:</label>
             <input type="text" id="username" name="username" required>
+            <br>
             <label for="password">Contraseña:</label>
             <input type="password" id="password" name="password" required>
+            <br>
             <button type="submit">Registrar</button>
         </form>
     </section>
@@ -57,7 +66,38 @@
             <p>&copy; 2024 Proyecto Sensor arduino. Todos los derechos reservados.</p>
         </div>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
 
+            function checkNavPosition() {
+                const nav = document.querySelector('nav');
+                const menu = document.querySelector('.menu');
+                const hamburger = document.querySelector('.hamburger');
+
+                if (nav.style.position === 'absolute') {
+                    menu.classList.remove('active');
+                    hamburger.disabled = true;  
+                } else {
+                    hamburger.disabled = false; 
+                }
+            }
+
+            window.addEventListener('scroll', function () {
+                checkNavPosition();
+            });
+            const hamburger = document.querySelector('.hamburger');
+            const menu = document.querySelector('.menu');
+
+            hamburger.addEventListener('click', () => {
+                menu.classList.toggle('active');
+            });
+            document.addEventListener('click', (event) => {
+                if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+                    menu.classList.remove('active');
+                }
+            });
+        });
+    </script>
     <script>
         document.getElementById('register-form').addEventListener('submit', async (event) => {
             event.preventDefault();

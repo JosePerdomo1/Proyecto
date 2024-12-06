@@ -1,17 +1,17 @@
 /* Estilos generales */
-body {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
     font-family: Arial, sans-serif;
     font-size: 1.3em;
+    height: 100%;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
-}
-
-html, body {
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    overflow-x: hidden; /* Evita el desbordamiento horizontal */
 }
 
 /* Tipografía */
@@ -41,7 +41,6 @@ h2 {
     align-items: center;
     text-align: center;
 }
-
 
 /* Estilos para el ID de temperatura */
 #temperature {
@@ -125,8 +124,8 @@ img {
 }
 
 .site a {
-    color: white;
     text-decoration: none;
+    color: white;
 }
 
 .site a:hover {
@@ -139,6 +138,7 @@ img {
     left: 0;
     background: #222;
     width: 100%;
+    overflow-x: hidden;
 }
 
 .site nav a {
@@ -158,7 +158,6 @@ iframe {
     max-width: 400px;
     height: auto;
 }
-
 
 /* Estilos para footer */
 .footer {
@@ -209,10 +208,6 @@ iframe {
     color: #ff9800;
 }
 
-.footer-section p i {
-    margin-right: 8px;
-}
-
 .footer-bottom {
     border-top: 1px solid #555;
     margin-top: 20px;
@@ -228,11 +223,15 @@ nav {
     justify-content: space-between;
     background-color: #007bff;
     padding: 0.5rem 1rem;
-    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw; /* Evita que el `nav` sea más ancho que el viewport */
+    overflow-x: hidden; /* Oculta el contenido que sobresale horizontalmente */
+    position: fixed;  /* Mantiene el nav fijo */
+
 }
 
 .menu {
-    display: flex;
+    display: flex; /* Para escritorio, muestra el menú siempre */
     gap: 1rem;
     list-style: none;
     margin: 0;
@@ -243,6 +242,7 @@ nav {
     text-decoration: none;
     color: white;
     font-weight: bold;
+    padding: 10px 15px; /* Estilo específico para escritorio */
 }
 
 /* Ajustar el botón hamburguesa */
@@ -255,43 +255,65 @@ nav {
     background: none;
     cursor: pointer;
     z-index: 1000;
-    padding: 10px; /* Añadir un poco de padding para evitar que se solapen */
+    padding: 10px;
 }
-
-.hamburger span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    border-radius: 2px;
-    transition: all 0.3s;
-}
-
-/* Ocultar el menú en móvil por defecto */
-.menu {
-    display: flex;
-}
-
-.menu.active {
-    display: flex; /* Muestra el menú desplegable */
-    flex-direction: column;
-    background-color: #007bff;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: 100%;
-    padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
 /* Media query para móviles */
 @media (max-width: 768px) {
+    /* Ajustes para el menú hamburguesa desplegable */
     .menu {
-        display: none; /* Oculta el menú en móviles por defecto */
+        display: none; /* Oculta el menú inicialmente */
+        flex-direction: column;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        max-width: 100vw; /* Limita el ancho */
+        overflow-x: hidden; /* Evita desbordamiento horizontal */
     }
 
+    .menu.active {
+        display: flex; /* Muestra el menú desplegable */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%; /* Asegúrate de que no desborde */
+        max-width: 100vw; /* Limita el ancho al viewport */
+        background-color: #007bff;
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 100px;
+    }
+
+    .menu li {
+        margin: 0;
+        padding: 0.5rem 1rem;
+        box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
+    }
+
+    .menu a {
+        display: block;
+        text-align: center;
+        padding: 10px;
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box; /* Incluye el padding dentro del ancho */
+    }
+
+    /* Ajuste del botón hamburguesa */
     .hamburger {
-        display: flex; /* Muestra el botón hamburguesa en móviles */
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        padding: 0.5rem;
+        border: none;
+        background: none;
+        cursor: pointer;
+        z-index: 1000;
+    }
+
+    .hamburger span {
+        width: 25px;
+        height: 3px;
+        background-color: white;
+        border-radius: 2px;
     }
 }
-

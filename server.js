@@ -88,18 +88,15 @@ app.post('/register', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // Verificar si el usuario ya existe
     const result = await pool.query('SELECT * FROM usuarios WHERE username = $1', [username]);
 
     if (result.rows.length > 0) {
       return res.status(400).send('El usuario ya existe');
     }
 
-    // Encriptar la contraseña
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Insertar el nuevo usuario en la base de datos
     const newUser = await pool.query('INSERT INTO usuarios (username, password) VALUES ($1, $2) RETURNING *', [username, hashedPassword]);
 
     res.status(201).send('Usuario registrado con éxito');

@@ -1,34 +1,70 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include "R4WiFi_secrets.h"  // Asegúrate de tener un archivo con las credenciales de WiFi
+#include "R4WiFi_secrets.h"
 #include <R4HttpClient.h>
 #include <WiFi.h>
+#include <ArduinoJson.h>
 
-#define TEMP_SENSOR 0
-#define LED_RED 12
-#define LED_GREEN 13
+#define ONE_WIRE_BUS 7
+#define LED_RED 13
+#define LED_GREEN 12
 
-WiFiSSLClient client;  // Cliente seguro para HTTPS
-R4HttpClient http;     // Cliente HTTP compatible con Arduino UNO R4 WiFi
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+WiFiSSLClient client;
+R4HttpClient http;
 
 const char* _SSID = SECRET_SSID;
 const char* _PASS = SECRET_PASS;
 const char* serverIP = "proyecto-pt9k.onrender.com";
 const int serverPort = 443;
+const char* googleApiKey = SECRET_PASS_GOOGLE;
+
+String city = "Valencia";
+float latitude = 0;
+float longitude = 0;
 
 void setup() {
   Serial.begin(115200);
-  while (!Serial);
+  while (!Serial)
+    ;
 
-  String fv = WiFi.firmwareVersion();
-  if (fv < WIFI_FIRMWARE_LATEST_VERSION) {
-    Serial.println(F("Please upgrade the firmware"));
+
+  sensors.begin();
+
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+
+  conectarWiFi();
+  obtenerUbicacionGoogle();  
+}
+
+void loop() {
+  // Verificar si se perdió la conexión WiFi
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Conexión WiFi perdida. Intentando reconectar...");
+    conectarWiFi();
+  }
+  
+  // Obtener y enviar la temperatura junto con la ubicación
+  sensors.requestTemperatures();
+  float temperature = sensors.getTempCByIndex(0);
+
+  if (temperature != DEVICE_DISCONNECTED_C) {
+    Serial.print("Temperatura: ");
+    Serial.print(temperature);
+    Serial.println(" °C");
+    enviarDatosAlServidor(temperature, city.c_str(), latitude, longitude);  
+  } else {
+    Serial.println("Error: Sensor no conectado o lectura inválida.");
   }
 
-  if (WiFi.status() == WL_NO_MODULE) {
-    Serial.println(F("Communication with WiFi module failed!"));
-    while (true);
-  }
+  delay(10000);
+}
+
+void conectarWiFi() {
+  digitalWrite(LED_RED, HIGH);
+  digitalWrite(LED_GREEN, LOW);
 
   Serial.println("Conectando a WiFi...");
   WiFi.begin(_SSID, _PASS);
@@ -37,39 +73,91 @@ void setup() {
     delay(1000);
     Serial.print(".");
   }
-  Serial.println("\nConectado a WiFi");
+
+  digitalWrite(LED_RED, LOW);
+  digitalWrite(LED_GREEN, HIGH);
+
+  Serial.println("\nConexión WiFi exitosa.");
   Serial.print("Dirección IP: ");
   Serial.println(WiFi.localIP());
 }
 
-float signalVoltage, temperature;
+void obtenerUbicacionGoogle() {
+  const char* host = "www.googleapis.com";
+  const int httpsPort = 443;
 
-void loop() {
-  // Lee la señal analógica (0 a 1023)
-  signalVoltage = analogRead(TEMP_SENSOR);
-  // Convierte la señal a temperatura en grados Celsius
-  temperature = (5 * signalVoltage * 100) / 1024;
+  String endpoint = String("/geolocation/v1/geolocate?key=") + googleApiKey;
 
-  if (temperature != DEVICE_DISCONNECTED_C) {
-    Serial.print("Temperatura: ");
-    Serial.print(temperature);
-    Serial.println(" °C");
-    enviarTemperaturaAlServidor(temperature);
-  } else {
-    Serial.println("Error: Sensor no conectado o lectura inválida.");
+  String payload = "{\"considerIp\": true}";  
+
+  Serial.println("Conectando al servidor de Google...");
+
+  if (!client.connect(host, httpsPort)) {
+    Serial.println("Error al conectar con Google.");
+    return;
   }
 
-  delay(10000);  // Espera 10 segundos antes de la próxima lectura
+  client.println("POST " + endpoint + " HTTP/1.1");
+  client.println("Host: " + String(host));
+  client.println("Content-Type: application/json");
+  client.println("Connection: close");
+  client.print("Content-Length: ");
+  client.println(payload.length());
+  client.println();         
+  client.println(payload);  
+
+  Serial.println("Solicitud enviada. Leyendo respuesta...");
+
+  String response = "";
+  while (client.connected()) {
+    if (client.available()) {
+      response += client.readString();
+    }
+  }
+
+  client.stop();
+
+  Serial.println("Respuesta completa:");
+  Serial.println(response.substring(0, 100)); 
+
+  int statusStart = response.indexOf("HTTP");
+  if (statusStart >= 0) {
+    String statusLine = response.substring(statusStart, response.indexOf("\n", statusStart));
+    Serial.println("Estado de la respuesta: " + statusLine);
+  }
+
+  int jsonStart = response.indexOf('{');
+  if (jsonStart >= 0) {
+    String jsonResponse = response.substring(jsonStart);
+    Serial.println("Cuerpo JSON recibido: ");
+    Serial.println(jsonResponse); 
+
+ 
+    StaticJsonDocument<256> doc;
+    DeserializationError error = deserializeJson(doc, jsonResponse);
+
+    if (!error) {
+      latitude = doc["location"]["lat"];  
+      longitude = doc["location"]["lng"]; 
+
+      Serial.print("Latitud: ");
+      Serial.println(latitude);
+      Serial.print("Longitud: ");
+      Serial.println(longitude);
+    } else {
+      Serial.println("Error al analizar JSON.");
+    }
+  } else {
+    Serial.println("No se encontró JSON en la respuesta.");
+  }
 }
 
-void enviarTemperaturaAlServidor(float temp) {
-  http.begin(client, "https://" + String(serverIP) + "/temperature?temp=" + String(temp), serverPort);
-  http.setTimeout(3000);
-  http.addHeader("User-Agent: Arduino UNO R4 WiFi");
-  http.addHeader("Connection: close");
+void enviarDatosAlServidor(float temp, const char* city, float lat, float lon) {
+  String url = String("/temperature?temp=") + String(temp) + "&city=" + String(city) + "&lat=" + String(lat) + "&lon=" + String(lon);
+  http.begin(client, String("https://") + serverIP + url, serverPort);
+  int responseNum = http.POST("");
 
-  int responseNum = http.GET();
-  if (responseNum > 0) {  // Si la solicitud fue exitosa
+  if (responseNum > 0) {
     String responseBody = http.getBody();
     Serial.println("Respuesta del servidor: " + responseBody);
     Serial.println("Código de respuesta: " + String(responseNum));
@@ -77,5 +165,5 @@ void enviarTemperaturaAlServidor(float temp) {
     Serial.println("Error en la solicitud: " + String(responseNum));
   }
 
-  http.close();  // Cierra la conexión HTTP
+  http.close();
 }

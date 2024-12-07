@@ -55,7 +55,9 @@
             <!-- Columna derecha: Datos del Arduino -->
             <div class="column">
                 <h2>Temperatura Interior</h2>
+                <br>
                 <p>Temperatura actual: <span id="temperature">Cargando...</span> °C</p>
+                <br>
                 <p>Ciudad: <span id="city">Cargando...</span></p>
                 <p>Latitud: <span id="latitude">Cargando...</span></p>
                 <p>Longitud: <span id="longitude">Cargando...</span></p>
@@ -93,22 +95,20 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Función para verificar si el nav tiene position: absolute
             function checkNavPosition() {
                 const nav = document.querySelector('nav');
                 const menu = document.querySelector('.menu');
                 const hamburger = document.querySelector('.hamburger');
 
-                // Si el nav tiene position: absolute, cerramos el menú y deshabilitamos el botón hamburguesa
+               
                 if (nav.style.position === 'absolute') {
                     menu.classList.remove('active');
-                    hamburger.disabled = true;  // Deshabilitar el botón hamburguesa
+                    hamburger.disabled = true;  
                 } else {
-                    hamburger.disabled = false; // Habilitar el botón hamburguesa
+                    hamburger.disabled = false; 
                 }
             }
 
-            // Detectar el cambio en la posición de `nav` mientras hacemos scroll
             window.addEventListener('scroll', function () {
                 checkNavPosition();
             });
@@ -119,7 +119,6 @@
                 menu.classList.toggle('active');
             });
 
-            // Cerrar el menú si se hace clic fuera de él
             document.addEventListener('click', (event) => {
                 if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
                     menu.classList.remove('active');
@@ -162,7 +161,6 @@
         fetchData();
     </script>
     <script>
-        ////Based on the Scroller function from @sallar
         var $content = $('header .content')
             , $blur = $('header .overlay')
             , wHeight = $(window).height();

@@ -84,18 +84,16 @@
     </footer>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Función para verificar si el nav tiene position: absolute
             function checkNavPosition() {
                 const nav = document.querySelector('nav');
                 const menu = document.querySelector('.menu');
                 const hamburger = document.querySelector('.hamburger');
 
-                // Si el nav tiene position: absolute, cerramos el menú y deshabilitamos el botón hamburguesa
                 if (nav.style.position === 'absolute') {
                     menu.classList.remove('active');
-                    hamburger.disabled = true;  // Deshabilitar el botón hamburguesa
+                    hamburger.disabled = true;  
                 } else {
-                    hamburger.disabled = false; // Habilitar el botón hamburguesa
+                    hamburger.disabled = false; 
                 }
             }
 
@@ -110,7 +108,6 @@
                 menu.classList.toggle('active');
             });
 
-            // Cerrar el menú si se hace clic fuera de él
             document.addEventListener('click', (event) => {
                 if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
                     menu.classList.remove('active');

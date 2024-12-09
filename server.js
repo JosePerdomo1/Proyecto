@@ -73,9 +73,6 @@ app.post('/api/validate-admin-password', (req, res) => {
 });
 
 
-app.get('/admin', isAuthenticated, (req, res) => {
-  res.send('Bienvenido a la página de administración');
-});
 app.post('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {

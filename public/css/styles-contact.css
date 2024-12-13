@@ -30,6 +30,13 @@ body {
     color: white;
     text-decoration: none;
 }
+.site p a {
+    color: black;
+    text-decoration: none;
+}
+.site p a:hover {
+    color: purple;
+}
 
 .site a:hover {
     color: #222;

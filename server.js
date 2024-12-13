@@ -72,15 +72,6 @@ app.post('/api/validate-admin-password', (req, res) => {
   }
 });
 
-
-app.post('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).send('Error al cerrar sesión');
-    }
-    res.send('Sesión cerrada con éxito');
-  });
-});
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
 
@@ -105,7 +96,7 @@ app.post('/register', async (req, res) => {
 
 
 app.post('/temperature', async (req, res) => {
-  const temperature = parseFloat(req.query.temp);
+  const temperature = parseFloat(parseFloat(req.query.temp).toFixed(1));
   const city = req.query.city;
   const latitude = parseFloat(req.query.lat);
   const longitude = parseFloat(req.query.lon);
